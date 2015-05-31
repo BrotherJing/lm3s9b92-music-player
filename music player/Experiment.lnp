@@ -1,0 +1,4 @@
+--cpu Cortex-M3 "startup_rvmdk.o" "kitronix320x240x16_ssd2119_8bit.o" "set_pinout.o" "sound.o" "touch.o" "tlv320aic23b.o" "ff.o" "mmc-dk-lm3s9b96.o" "ustdlib.o" "main.o" "uartstdio.o" "uartconfigure.o" "uartisr.o" "gpiodriverconfigure.o" "sysctlconfigure.o" "H:\tempInstall\StellarisWare\driverlib\rvmdk\driverlib.lib" "H:\tempInstall\StellarisWare\grlib\rvmdk\grlib.lib" --strict --scatter ".\Experiment.sct" 
+--entry Reset_Handler --autoat --summary_stderr --info summarysizes --map --xref --callgraph --symbols 
+--info sizes --info totals --info unused --info veneers 
+ --list ".\Experiment.map" -o "Experiment.axf"

@@ -1,0 +1,17 @@
+sound.o: drivers\sound.c
+sound.o: H:\tempInstall\StellarisWare\inc/hw_ints.h
+sound.o: H:\tempInstall\StellarisWare\inc/hw_memmap.h
+sound.o: H:\tempInstall\StellarisWare\inc/hw_timer.h
+sound.o: H:\tempInstall\StellarisWare\inc/hw_types.h
+sound.o: H:\tempInstall\StellarisWare\driverlib/debug.h
+sound.o: H:\tempInstall\StellarisWare\driverlib/gpio.h
+sound.o: H:\tempInstall\StellarisWare\driverlib/interrupt.h
+sound.o: H:\tempInstall\StellarisWare\driverlib/sysctl.h
+sound.o: H:\tempInstall\StellarisWare\driverlib/timer.h
+sound.o: H:\tempInstall\StellarisWare\inc/hw_udma.h
+sound.o: H:\tempInstall\StellarisWare\inc/hw_sysctl.h
+sound.o: H:\tempInstall\StellarisWare\inc/hw_i2s.h
+sound.o: H:\tempInstall\StellarisWare\driverlib/i2s.h
+sound.o: H:\tempInstall\StellarisWare\driverlib/udma.h
+sound.o: ..\OpenProject2\drivers/tlv320aic23b.h
+sound.o: ..\OpenProject2\drivers/sound.h

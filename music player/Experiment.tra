@@ -1,0 +1,35 @@
+*** Creating Trace Output File 'Experiment.tra' Ok.
+### Preparing for ADS-LD.
+### Creating ADS-LD Command Line
+### List of Objects: adding '"startup_rvmdk.o"'
+### List of Objects: adding '"kitronix320x240x16_ssd2119_8bit.o"'
+### List of Objects: adding '"set_pinout.o"'
+### List of Objects: adding '"sound.o"'
+### List of Objects: adding '"touch.o"'
+### List of Objects: adding '"tlv320aic23b.o"'
+### List of Objects: adding '"ff.o"'
+### List of Objects: adding '"mmc-dk-lm3s9b96.o"'
+### List of Objects: adding '"ustdlib.o"'
+### List of Objects: adding '"main.o"'
+### List of Objects: adding '"uartstdio.o"'
+### List of Objects: adding '"uartconfigure.o"'
+### List of Objects: adding '"uartisr.o"'
+### List of Objects: adding '"gpiodriverconfigure.o"'
+### List of Objects: adding '"sysctlconfigure.o"'
+### List of Objects: adding '"H:\tempInstall\StellarisWare\driverlib\rvmdk\driverlib.lib"'
+### List of Objects: adding '"H:\tempInstall\StellarisWare\grlib\rvmdk\grlib.lib"'
+### ADS-LD Command completed:
+--cpu Cortex-M3 "startup_rvmdk.o" "kitronix320x240x16_ssd2119_8bit.o" "set_pinout.o" "sound.o" "touch.o" "tlv320aic23b.o" "ff.o" "mmc-dk-lm3s9b96.o" "ustdlib.o" "main.o" "uartstdio.o" "uartconfigure.o" "uartisr.o" "gpiodriverconfigure.o" "sysctlconfigure.o" "H:\tempInstall\StellarisWare\driverlib\rvmdk\driverlib.lib" "H:\tempInstall\StellarisWare\grlib\rvmdk\grlib.lib" --strict --scatter ".\Experiment.sct" 
+--entry Reset_Handler --autoat --summary_stderr --info summarysizes --map --xref --callgraph --symbols 
+--info sizes --info totals --info unused --info veneers 
+ --list ".\Experiment.map" -o "Experiment.axf"### Preparing Environment (PrepEnvAds)
+### ADS-LD Output File: 'Experiment.axf'
+### ADS-LD Command File: 'Experiment.lnp'
+### Checking for dirty Components...
+### Creating CmdFile 'Experiment.lnp', Handle=0x00000784
+### Writing '.lnp' file
+### ADS-LD Command file 'Experiment.lnp' is ready.
+### ADS-LD: About to start ADS-LD Thread.
+### ADS-LD: executed with 0 errors
+### Updating obj list
+### LDADS_file() completed.

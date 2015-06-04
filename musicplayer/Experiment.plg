@@ -1,0 +1,394 @@
+<html>
+<body>
+<pre>
+<h1>µVision Build Log</h1>
+<h2>Project:</h2>
+C:\Users\Administrator\Documents\lm3s9b92-music-player\musicplayer\Experiment.uvproj
+Project File Date:  06/04/2015
+
+<h2>Output:</h2>
+Build target 'Target 1'
+compiling main.c...
+main.c(107): error:  #20: identifier "OnBackBtnPress" is undefined
+main.c(741): error:  #20: identifier "t_Widget" is undefined
+main.c(741): error:  #29: expected an expression
+main.c(741): error:  #31: expression must have integral type
+main.c(742): error:  #29: expected an expression
+main.c(742): error:  #31: expression must have integral type
+main.c(749): error:  #20: identifier "t_Widget" is undefined
+main.c(749): error:  #29: expected an expression
+main.c(749): error:  #31: expression must have integral type
+main.c(750): error:  #29: expected an expression
+main.c(750): error:  #31: expression must have integral type
+Target not created
+Build target 'Target 1'
+compiling main.c...
+main.c(742): error:  #20: identifier "t_Widget" is undefined
+main.c(742): error:  #29: expected an expression
+main.c(742): error:  #31: expression must have integral type
+main.c(743): error:  #29: expected an expression
+main.c(743): error:  #31: expression must have integral type
+main.c(750): error:  #20: identifier "t_Widget" is undefined
+main.c(750): error:  #29: expected an expression
+main.c(750): error:  #31: expression must have integral type
+main.c(751): error:  #29: expected an expression
+main.c(751): error:  #31: expression must have integral type
+Target not created
+Build target 'Target 1'
+compiling main.c...
+linking...
+Program Size: Code=28340 RO-data=7440 RW-data=748 ZI-data=12116  
+"Experiment.axf" - 0 Error(s), 0 Warning(s).
+Load "C:\\Users\\Administrator\\Documents\\lm3s9b92-music-player\\musicplayer\\Experiment.AXF" 
+Connecting: Mode=JTAG, Speed=1000000Hz
+Erase Done.
+Programming Done.
+Verify OK.
+Build target 'Target 1'
+compiling main.c...
+main.c(195): error:  #20: identifier "pWaveHeader" is undefined
+main.c(194): warning:  #167-D: argument of type "unsigned char *" is incompatible with parameter of type "char *"
+main.c(198): error:  #171: invalid type conversion
+main.c(198): warning:  #144-D: a value of type "unsigned char *" cannot be used to initialize an entity of type "const char *"
+main.c(317): warning:  #167-D: argument of type "unsigned char *" is incompatible with parameter of type "char *"
+main.c(318): error:  #171: invalid type conversion
+main.c(318): warning:  #144-D: a value of type "unsigned char *" cannot be used to initialize an entity of type "const char *"
+Target not created
+Build target 'Target 1'
+compiling main.c...
+main.c(194): warning:  #167-D: argument of type "unsigned char *" is incompatible with parameter of type "char *"
+main.c(198): error:  #171: invalid type conversion
+main.c(198): warning:  #144-D: a value of type "unsigned char *" cannot be used to initialize an entity of type "const char *"
+main.c(317): warning:  #167-D: argument of type "unsigned char *" is incompatible with parameter of type "char *"
+main.c(318): error:  #171: invalid type conversion
+main.c(318): warning:  #144-D: a value of type "unsigned char *" cannot be used to initialize an entity of type "const char *"
+Target not created
+Build target 'Target 1'
+compiling main.c...
+main.c(194): warning:  #167-D: argument of type "unsigned char *" is incompatible with parameter of type "char *"
+main.c(198): error:  #144: a value of type "tWidget *" cannot be used to initialize an entity of type "tCanvasWidget *"
+main.c(198): warning:  #144-D: a value of type "unsigned char *" cannot be used to initialize an entity of type "const char *"
+main.c(317): warning:  #167-D: argument of type "unsigned char *" is incompatible with parameter of type "char *"
+main.c(318): error:  #144: a value of type "tWidget *" cannot be used to initialize an entity of type "tCanvasWidget *"
+main.c(318): warning:  #144-D: a value of type "unsigned char *" cannot be used to initialize an entity of type "const char *"
+Target not created
+Build target 'Target 1'
+compiling main.c...
+main.c(194): warning:  #167-D: argument of type "unsigned char *" is incompatible with parameter of type "char *"
+main.c(198): warning:  #144-D: a value of type "unsigned char *" cannot be used to initialize an entity of type "const char *"
+main.c(317): warning:  #167-D: argument of type "unsigned char *" is incompatible with parameter of type "char *"
+main.c(318): warning:  #144-D: a value of type "unsigned char *" cannot be used to initialize an entity of type "const char *"
+linking...
+Program Size: Code=28512 RO-data=7440 RW-data=812 ZI-data=12068  
+"Experiment.axf" - 0 Error(s), 4 Warning(s).
+Build target 'Target 1'
+compiling main.c...
+linking...
+Program Size: Code=28512 RO-data=7440 RW-data=812 ZI-data=12068  
+"Experiment.axf" - 0 Error(s), 0 Warning(s).
+Load "C:\\Users\\Administrator\\Documents\\lm3s9b92-music-player\\musicplayer\\Experiment.AXF" 
+Connecting: Mode=JTAG, Speed=1000000Hz
+Erase Done.
+Programming Done.
+Verify OK.
+Build target 'Target 1'
+compiling main.c...
+linking...
+Program Size: Code=28512 RO-data=7440 RW-data=812 ZI-data=12068  
+"Experiment.axf" - 0 Error(s), 0 Warning(s).
+Load "C:\\Users\\Administrator\\Documents\\lm3s9b92-music-player\\musicplayer\\Experiment.AXF" 
+Connecting: Mode=JTAG, Speed=1000000Hz
+Erase Done.
+Programming Done.
+Verify OK.
+Build target 'Target 1'
+compiling main.c...
+main.c(199): error:  #167: argument of type "tCanvasWidget *" is incompatible with parameter of type "tWidget *"
+main.c(321): error:  #167: argument of type "tCanvasWidget *" is incompatible with parameter of type "tWidget *"
+Target not created
+Build target 'Target 1'
+compiling main.c...
+linking...
+Program Size: Code=28552 RO-data=7440 RW-data=812 ZI-data=12068  
+"Experiment.axf" - 0 Error(s), 0 Warning(s).
+Load "C:\\Users\\Administrator\\Documents\\lm3s9b92-music-player\\musicplayer\\Experiment.AXF" 
+Connecting: Mode=JTAG, Speed=1000000Hz
+Erase Done.
+Programming Done.
+Verify OK.
+Build target 'Target 1'
+compiling main.c...
+linking...
+Program Size: Code=28512 RO-data=7440 RW-data=812 ZI-data=12068  
+"Experiment.axf" - 0 Error(s), 0 Warning(s).
+Load "C:\\Users\\Administrator\\Documents\\lm3s9b92-music-player\\musicplayer\\Experiment.AXF" 
+Connecting: Mode=JTAG, Speed=1000000Hz
+Erase Done.
+Programming Done.
+Verify OK.
+Build target 'Target 1'
+compiling main.c...
+linking...
+Program Size: Code=28536 RO-data=7440 RW-data=820 ZI-data=12060  
+"Experiment.axf" - 0 Error(s), 0 Warning(s).
+Load "C:\\Users\\Administrator\\Documents\\lm3s9b92-music-player\\musicplayer\\Experiment.AXF" 
+Connecting: Mode=JTAG, Speed=1000000Hz
+Erase Done.
+Programming Done.
+Verify OK.
+Build target 'Target 1'
+compiling main.c...
+linking...
+Program Size: Code=28440 RO-data=7440 RW-data=820 ZI-data=12060  
+"Experiment.axf" - 0 Error(s), 0 Warning(s).
+Load "C:\\Users\\Administrator\\Documents\\lm3s9b92-music-player\\musicplayer\\Experiment.AXF" 
+Connecting: Mode=JTAG, Speed=1000000Hz
+Erase Done.
+Programming Done.
+Verify OK.
+Build target 'Target 1'
+assembling startup_rvmdk.S...
+compiling main.c...
+linking...
+Program Size: Code=28576 RO-data=7440 RW-data=820 ZI-data=12060  
+"Experiment.axf" - 0 Error(s), 0 Warning(s).
+Load "C:\\Users\\Administrator\\Documents\\lm3s9b92-music-player\\musicplayer\\Experiment.AXF" 
+Connecting: Mode=JTAG, Speed=1000000Hz
+Erase Done.
+Programming Done.
+Verify OK.
+Build target 'Target 1'
+compiling main.c...
+main.c(664): warning:  #223-D: function "TimerInitial" declared implicitly
+linking...
+Experiment.axf: Error: L6218E: Undefined symbol TimerInitial (referred from main.o).
+Target not created
+Build target 'Target 1'
+compiling main.c...
+TimerConfigure.h(6): warning:  #1-D: last line of file ends without a newline
+linking...
+Experiment.axf: Error: L6218E: Undefined symbol TimerInitial (referred from main.o).
+Target not created
+Build target 'Target 1'
+compiling TimerConfigure.c...
+TimerConfigure.h(6): warning:  #1-D: last line of file ends without a newline
+linking...
+Program Size: Code=28656 RO-data=7440 RW-data=820 ZI-data=12060  
+"Experiment.axf" - 0 Error(s), 1 Warning(s).
+Build target 'Target 1'
+compiling main.c...
+compiling TimerConfigure.c...
+linking...
+Program Size: Code=28656 RO-data=7440 RW-data=820 ZI-data=12060  
+"Experiment.axf" - 0 Error(s), 0 Warning(s).
+Load "C:\\Users\\Administrator\\Documents\\lm3s9b92-music-player\\musicplayer\\Experiment.AXF" 
+Connecting: Mode=JTAG, Speed=1000000Hz
+Erase Done.
+Programming Done.
+Verify OK.
+Build target 'Target 1'
+compiling TimerConfigure.c...
+linking...
+Program Size: Code=28676 RO-data=7440 RW-data=820 ZI-data=12060  
+"Experiment.axf" - 0 Error(s), 0 Warning(s).
+Load "C:\\Users\\Administrator\\Documents\\lm3s9b92-music-player\\musicplayer\\Experiment.AXF" 
+Connecting: Mode=JTAG, Speed=1000000Hz
+Erase Done.
+Programming Done.
+Verify OK.
+Load "C:\\Users\\Administrator\\Documents\\lm3s9b92-music-player\\musicplayer\\Experiment.AXF" 
+Connecting: Mode=JTAG, Speed=1000000Hz
+Erase Done.
+Programming Done.
+Verify OK.
+Build target 'Target 1'
+compiling main.c...
+linking...
+Program Size: Code=28716 RO-data=7440 RW-data=820 ZI-data=12060  
+"Experiment.axf" - 0 Error(s), 0 Warning(s).
+Load "C:\\Users\\Administrator\\Documents\\lm3s9b92-music-player\\musicplayer\\Experiment.AXF" 
+Connecting: Mode=JTAG, Speed=1000000Hz
+Erase Done.
+Programming Done.
+Verify OK.
+Build target 'Target 1'
+compiling main.c...
+linking...
+Program Size: Code=28720 RO-data=7440 RW-data=820 ZI-data=12060  
+"Experiment.axf" - 0 Error(s), 0 Warning(s).
+Load "C:\\Users\\Administrator\\Documents\\lm3s9b92-music-player\\musicplayer\\Experiment.AXF" 
+Connecting: Mode=JTAG, Speed=1000000Hz
+Erase Done.
+Programming Done.
+Verify OK.
+Build target 'Target 1'
+compiling main.c...
+linking...
+Program Size: Code=28716 RO-data=7440 RW-data=820 ZI-data=12060  
+"Experiment.axf" - 0 Error(s), 0 Warning(s).
+Load "C:\\Users\\Administrator\\Documents\\lm3s9b92-music-player\\musicplayer\\Experiment.AXF" 
+Connecting: Mode=JTAG, Speed=1000000Hz
+Connection failed!, error code=&d
+Load "C:\\Users\\Administrator\\Documents\\lm3s9b92-music-player\\musicplayer\\Experiment.AXF" 
+Connecting: Mode=JTAG, Speed=1000000Hz
+Erase Done.
+Programming Done.
+Verify OK.
+Build target 'Target 1'
+compiling main.c...
+main.c(424): error:  #29: expected an expression
+main.c(426): error:  #29: expected an expression
+Target not created
+Build target 'Target 1'
+compiling main.c...
+main.c(424): error:  #20: identifier "g_sProgressBar" is undefined
+main.c(426): error:  #20: identifier "g_sProgressBar" is undefined
+Target not created
+Build target 'Target 1'
+compiling main.c...
+linking...
+Program Size: Code=28772 RO-data=7440 RW-data=820 ZI-data=12060  
+"Experiment.axf" - 0 Error(s), 0 Warning(s).
+Load "C:\\Users\\Administrator\\Documents\\lm3s9b92-music-player\\musicplayer\\Experiment.AXF" 
+Connecting: Mode=JTAG, Speed=1000000Hz
+Erase Done.
+Programming Done.
+Verify OK.
+Build target 'Target 1'
+compiling main.c...
+linking...
+Program Size: Code=28720 RO-data=7440 RW-data=884 ZI-data=11996  
+"Experiment.axf" - 0 Error(s), 0 Warning(s).
+Load "C:\\Users\\Administrator\\Documents\\lm3s9b92-music-player\\musicplayer\\Experiment.AXF" 
+Connecting: Mode=JTAG, Speed=1000000Hz
+Erase Done.
+Programming Done.
+Verify OK.
+Build target 'Target 1'
+compiling main.c...
+linking...
+Program Size: Code=28748 RO-data=7440 RW-data=888 ZI-data=11992  
+"Experiment.axf" - 0 Error(s), 0 Warning(s).
+Load "C:\\Users\\Administrator\\Documents\\lm3s9b92-music-player\\musicplayer\\Experiment.AXF" 
+Connecting: Mode=JTAG, Speed=1000000Hz
+Erase Done.
+Programming Done.
+Verify OK.
+Build target 'Target 1'
+compiling main.c...
+linking...
+Program Size: Code=28772 RO-data=7440 RW-data=888 ZI-data=11992  
+"Experiment.axf" - 0 Error(s), 0 Warning(s).
+Load "C:\\Users\\Administrator\\Documents\\lm3s9b92-music-player\\musicplayer\\Experiment.AXF" 
+Connecting: Mode=JTAG, Speed=1000000Hz
+Erase Done.
+Programming Done.
+Verify OK.
+Build target 'Target 1'
+compiling main.c...
+linking...
+Program Size: Code=28768 RO-data=7440 RW-data=888 ZI-data=11992  
+"Experiment.axf" - 0 Error(s), 0 Warning(s).
+Load "C:\\Users\\Administrator\\Documents\\lm3s9b92-music-player\\musicplayer\\Experiment.AXF" 
+Connecting: Mode=JTAG, Speed=1000000Hz
+Erase Done.
+Programming Done.
+Verify OK.
+Build target 'Target 1'
+compiling main.c...
+linking...
+Program Size: Code=28524 RO-data=7440 RW-data=884 ZI-data=11996  
+"Experiment.axf" - 0 Error(s), 0 Warning(s).
+Load "C:\\Users\\Administrator\\Documents\\lm3s9b92-music-player\\musicplayer\\Experiment.AXF" 
+Connecting: Mode=JTAG, Speed=1000000Hz
+Erase Done.
+Programming Done.
+Verify OK.
+Build target 'Target 1'
+compiling main.c...
+compiling UARTISR.c...
+UARTISR.c(27): warning:  #514-D: pointless comparison of unsigned integer with a negative constant
+UARTISR.c(36): warning:  #167-D: argument of type "unsigned char *" is incompatible with parameter of type "const char *"
+linking...
+Program Size: Code=28536 RO-data=7440 RW-data=884 ZI-data=11996  
+"Experiment.axf" - 0 Error(s), 2 Warning(s).
+Build target 'Target 1'
+compiling UARTISR.c...
+UARTISR.c(27): warning:  #514-D: pointless comparison of unsigned integer with a negative constant
+UARTISR.c(36): warning:  #167-D: argument of type "unsigned char *" is incompatible with parameter of type "const char *"
+linking...
+Program Size: Code=28536 RO-data=7440 RW-data=884 ZI-data=11996  
+"Experiment.axf" - 0 Error(s), 2 Warning(s).
+Build target 'Target 1'
+compiling UARTISR.c...
+UARTISR.c(34): warning:  #167-D: argument of type "unsigned char *" is incompatible with parameter of type "const char *"
+linking...
+Program Size: Code=28548 RO-data=7440 RW-data=884 ZI-data=11996  
+"Experiment.axf" - 0 Error(s), 1 Warning(s).
+Build target 'Target 1'
+compiling UARTISR.c...
+UARTISR.c(34): warning:  #167-D: argument of type "unsigned char *" is incompatible with parameter of type "const char *"
+linking...
+Program Size: Code=28548 RO-data=7440 RW-data=884 ZI-data=11996  
+"Experiment.axf" - 0 Error(s), 1 Warning(s).
+Load "C:\\Users\\Administrator\\Documents\\lm3s9b92-music-player\\musicplayer\\Experiment.AXF" 
+Connecting: Mode=JTAG, Speed=1000000Hz
+Erase Done.
+Programming Done.
+Verify OK.
+Build target 'Target 1'
+compiling main.c...
+compiling UARTISR.c...
+UARTISR.c(31): warning:  #167-D: argument of type "unsigned char *" is incompatible with parameter of type "const char *"
+linking...
+Program Size: Code=28508 RO-data=7440 RW-data=884 ZI-data=11996  
+"Experiment.axf" - 0 Error(s), 1 Warning(s).
+Load "C:\\Users\\Administrator\\Documents\\lm3s9b92-music-player\\musicplayer\\Experiment.AXF" 
+Connecting: Mode=JTAG, Speed=1000000Hz
+Erase Done.
+Programming Done.
+Verify OK.
+Build target 'Target 1'
+compiling main.c...
+linking...
+Program Size: Code=28608 RO-data=7440 RW-data=884 ZI-data=11996  
+"Experiment.axf" - 0 Error(s), 0 Warning(s).
+Load "C:\\Users\\Administrator\\Documents\\lm3s9b92-music-player\\musicplayer\\Experiment.AXF" 
+Connecting: Mode=JTAG, Speed=1000000Hz
+Erase Done.
+Programming Done.
+Verify OK.
+Build target 'Target 1'
+compiling main.c...
+linking...
+Program Size: Code=28644 RO-data=7440 RW-data=884 ZI-data=11996  
+"Experiment.axf" - 0 Error(s), 0 Warning(s).
+Load "C:\\Users\\Administrator\\Documents\\lm3s9b92-music-player\\musicplayer\\Experiment.AXF" 
+Connecting: Mode=JTAG, Speed=1000000Hz
+Erase Done.
+Programming Done.
+Verify OK.
+Build target 'Target 1'
+compiling main.c...
+main.c(225): error:  #20: identifier "TheSysClock" is undefined
+Target not created
+Build target 'Target 1'
+compiling main.c...
+linking...
+Program Size: Code=28668 RO-data=7440 RW-data=884 ZI-data=11996  
+"Experiment.axf" - 0 Error(s), 0 Warning(s).
+Load "C:\\Users\\Administrator\\Documents\\lm3s9b92-music-player\\musicplayer\\Experiment.AXF" 
+Connecting: Mode=JTAG, Speed=1000000Hz
+Erase Done.
+Programming Done.
+Verify OK.
+Build target 'Target 1'
+compiling main.c...
+linking...
+Program Size: Code=28664 RO-data=7440 RW-data=884 ZI-data=11996  
+"Experiment.axf" - 0 Error(s), 0 Warning(s).
+Load "C:\\Users\\Administrator\\Documents\\lm3s9b92-music-player\\musicplayer\\Experiment.AXF" 
+Connecting: Mode=JTAG, Speed=1000000Hz
+Erase Done.
+Programming Done.
+Verify OK.

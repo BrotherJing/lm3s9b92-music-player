@@ -1,0 +1,17 @@
+touch.o: drivers\touch.c
+touch.o: H:\tempInstall\StellarisWare\inc/hw_adc.h
+touch.o: H:\tempInstall\StellarisWare\inc/hw_gpio.h
+touch.o: H:\tempInstall\StellarisWare\inc/hw_ints.h
+touch.o: H:\tempInstall\StellarisWare\inc/hw_memmap.h
+touch.o: H:\tempInstall\StellarisWare\inc/hw_timer.h
+touch.o: H:\tempInstall\StellarisWare\inc/hw_types.h
+touch.o: H:\tempInstall\StellarisWare\driverlib/adc.h
+touch.o: H:\tempInstall\StellarisWare\driverlib/gpio.h
+touch.o: H:\tempInstall\StellarisWare\driverlib/interrupt.h
+touch.o: H:\tempInstall\StellarisWare\driverlib/sysctl.h
+touch.o: H:\tempInstall\StellarisWare\driverlib/timer.h
+touch.o: H:\tempInstall\StellarisWare\grlib/grlib.h
+touch.o: H:\tempInstall\StellarisWare\grlib/widget.h
+touch.o: ..\musicplayer\drivers/touch.h
+touch.o: ..\musicplayer\drivers/set_pinout.h
+touch.o: ..\musicplayer\drivers/kitronix320x240x16_ssd2119_8bit.h

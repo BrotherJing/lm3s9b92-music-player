@@ -21,6 +21,7 @@ uartisr.o: H:\tempInstall\StellarisWare\driverlib/pin_map.h
 uartisr.o: H:\tempInstall\StellarisWare\driverlib/systick.h
 uartisr.o: H:\tempInstall\StellarisWare\driverlib/timer.h
 uartisr.o: H:\tempInstall\StellarisWare\driverlib/interrupt.h
+uartisr.o: H:\tempInstall\StellarisWare\driverlib/ethernet.h
 uartisr.o: H:\tempInstall\StellarisWare\driverlib/watchdog.h
 uartisr.o: H:\tempInstall\StellarisWare\driverlib/uart.h
 uartisr.o: H:\tempInstall\StellarisWare\driverlib/i2c.h

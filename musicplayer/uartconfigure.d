@@ -22,6 +22,7 @@ uartconfigure.o: H:\tempInstall\StellarisWare\driverlib/pin_map.h
 uartconfigure.o: H:\tempInstall\StellarisWare\driverlib/systick.h
 uartconfigure.o: H:\tempInstall\StellarisWare\driverlib/timer.h
 uartconfigure.o: H:\tempInstall\StellarisWare\driverlib/interrupt.h
+uartconfigure.o: H:\tempInstall\StellarisWare\driverlib/ethernet.h
 uartconfigure.o: H:\tempInstall\StellarisWare\driverlib/watchdog.h
 uartconfigure.o: H:\tempInstall\StellarisWare\driverlib/uart.h
 uartconfigure.o: H:\tempInstall\StellarisWare\driverlib/i2c.h

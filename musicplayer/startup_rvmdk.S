@@ -83,6 +83,7 @@ __heap_limit
         EXTERN  SysTickHandler
 		EXTERN  UART0_ISR
 		EXTERN  Timer_ISR
+		EXTERN  lwIPEthernetIntHandler
 
 ;******************************************************************************
 ;
@@ -149,7 +150,7 @@ __Vectors
         DCD     IntDefaultHandler           ; CAN0
         DCD     IntDefaultHandler           ; CAN1
         DCD     IntDefaultHandler           ; CAN2
-        DCD     IntDefaultHandler           ; Ethernet
+        DCD     lwIPEthernetIntHandler           ; Ethernet
         DCD     IntDefaultHandler           ; Hibernate
         DCD     IntDefaultHandler           ; USB0
         DCD     IntDefaultHandler           ; PWM Generator 3

@@ -12,22 +12,26 @@
 ### List of Objects: adding '"ustdlib.o"'
 ### List of Objects: adding '"main.o"'
 ### List of Objects: adding '"uartstdio.o"'
-### List of Objects: adding '"uartconfigure.o"'
-### List of Objects: adding '"uartisr.o"'
-### List of Objects: adding '"gpiodriverconfigure.o"'
-### List of Objects: adding '"sysctlconfigure.o"'
-### List of Objects: adding '"timerconfigure.o"'
+### List of Objects: adding '"locator.o"'
+### List of Objects: adding '"lwiplib.o"'
 ### List of Objects: adding '"H:\tempInstall\StellarisWare\driverlib\rvmdk\driverlib.lib"'
 ### List of Objects: adding '"H:\tempInstall\StellarisWare\grlib\rvmdk\grlib.lib"'
+### List of Objects: adding '"uartisr.o"'
+### List of Objects: adding '"tcphandler.o"'
+### List of Objects: adding '"sysctlconfigure.o"'
+### List of Objects: adding '"uartconfigure.o"'
+### List of Objects: adding '"gpiodriverconfigure.o"'
+### List of Objects: adding '"timerconfigure.o"'
+### List of Objects: adding '"ethernetconfigure.o"'
 ### ADS-LD Command completed:
---cpu Cortex-M3 "startup_rvmdk.o" "kitronix320x240x16_ssd2119_8bit.o" "set_pinout.o" "sound.o" "touch.o" "tlv320aic23b.o" "ff.o" "mmc-dk-lm3s9b96.o" "ustdlib.o" "main.o" "uartstdio.o" "uartconfigure.o" "uartisr.o" "gpiodriverconfigure.o" "sysctlconfigure.o" "timerconfigure.o" "H:\tempInstall\StellarisWare\driverlib\rvmdk\driverlib.lib" "H:\tempInstall\StellarisWare\grlib\rvmdk\grlib.lib" --strict --scatter ".\Experiment.sct" 
+--cpu Cortex-M3 "startup_rvmdk.o" "kitronix320x240x16_ssd2119_8bit.o" "set_pinout.o" "sound.o" "touch.o" "tlv320aic23b.o" "ff.o" "mmc-dk-lm3s9b96.o" "ustdlib.o" "main.o" "uartstdio.o" "locator.o" "lwiplib.o" "H:\tempInstall\StellarisWare\driverlib\rvmdk\driverlib.lib" "H:\tempInstall\StellarisWare\grlib\rvmdk\grlib.lib" "uartisr.o" "tcphandler.o" "sysctlconfigure.o" "uartconfigure.o" "gpiodriverconfigure.o" "timerconfigure.o" "ethernetconfigure.o" --strict --scatter ".\Experiment.sct" 
 --entry Reset_Handler --autoat --summary_stderr --info summarysizes --map --xref --callgraph --symbols 
 --info sizes --info totals --info unused --info veneers 
  --list ".\Experiment.map" -o "Experiment.axf"### Preparing Environment (PrepEnvAds)
 ### ADS-LD Output File: 'Experiment.axf'
 ### ADS-LD Command File: 'Experiment.lnp'
 ### Checking for dirty Components...
-### Creating CmdFile 'Experiment.lnp', Handle=0x00000478
+### Creating CmdFile 'Experiment.lnp', Handle=0x00000628
 ### Writing '.lnp' file
 ### ADS-LD Command file 'Experiment.lnp' is ready.
 ### ADS-LD: About to start ADS-LD Thread.

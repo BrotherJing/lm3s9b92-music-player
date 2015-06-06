@@ -21,6 +21,7 @@ timerconfigure.o: H:\tempInstall\StellarisWare\driverlib/pin_map.h
 timerconfigure.o: H:\tempInstall\StellarisWare\driverlib/systick.h
 timerconfigure.o: H:\tempInstall\StellarisWare\driverlib/timer.h
 timerconfigure.o: H:\tempInstall\StellarisWare\driverlib/interrupt.h
+timerconfigure.o: H:\tempInstall\StellarisWare\driverlib/ethernet.h
 timerconfigure.o: H:\tempInstall\StellarisWare\driverlib/watchdog.h
 timerconfigure.o: H:\tempInstall\StellarisWare\driverlib/uart.h
 timerconfigure.o: H:\tempInstall\StellarisWare\driverlib/i2c.h

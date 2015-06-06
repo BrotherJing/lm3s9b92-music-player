@@ -21,6 +21,7 @@ sysctlconfigure.o: H:\tempInstall\StellarisWare\driverlib/pin_map.h
 sysctlconfigure.o: H:\tempInstall\StellarisWare\driverlib/systick.h
 sysctlconfigure.o: H:\tempInstall\StellarisWare\driverlib/timer.h
 sysctlconfigure.o: H:\tempInstall\StellarisWare\driverlib/interrupt.h
+sysctlconfigure.o: H:\tempInstall\StellarisWare\driverlib/ethernet.h
 sysctlconfigure.o: H:\tempInstall\StellarisWare\driverlib/watchdog.h
 sysctlconfigure.o: H:\tempInstall\StellarisWare\driverlib/uart.h
 sysctlconfigure.o: H:\tempInstall\StellarisWare\driverlib/i2c.h

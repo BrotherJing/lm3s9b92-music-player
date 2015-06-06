@@ -9,10 +9,15 @@
 #include "grlib/slider.h"
 #include "grlib/listbox.h"
 #include "grlib/pushbutton.h"
+
 #include "utils/ustdlib.h"			   
-#include "utils/uartstdio.h"
+#include "utils/uartstdio.h"		 
+#include "utils/locator.h"
+#include "utils/lwiplib.h"
+
 #include "third_party/fatfs/src/ff.h"
 #include "third_party/fatfs/src/diskio.h"
+
 #include "drivers/kitronix320x240x16_ssd2119_idm_sbc.h"
 #include "drivers/sound.h"
 #include "drivers/touch.h"
@@ -22,9 +27,11 @@
 #include "GPIODriverConfigure.h"
 #include "TimerConfigure.h"
 #include "SysCtlConfigure.h"
+#include "EthernetConfigure.h"
+#include "TCPhandler.h"
 #include "WaveFileHelper.h"
 #include "FileHelper.h"
-#include "main.h"
+#include "main.h" 
 
 #ifdef ewarm
 #pragma data_alignment=1024
@@ -35,36 +42,6 @@ tDMAControlTable sDMAControlTable[64];
 #else
 tDMAControlTable sDMAControlTable[64] __attribute__ ((aligned(1024)));
 #endif
-					   
-#define TICKS_PER_SECOND 100
-
-typedef struct
-{
-    FRESULT fresult;
-    char *pcResultStr;
-}
-tFresultString;
-
-#define FRESULT_ENTRY(f)        { (f), (#f) }
-#define NUM_FRESULT_CODES  14 
-
-tFresultString g_sFresultStrings[] =
-{
-    FRESULT_ENTRY(FR_OK),
-    FRESULT_ENTRY(FR_NOT_READY),
-    FRESULT_ENTRY(FR_NO_FILE),
-    FRESULT_ENTRY(FR_NO_PATH),
-    FRESULT_ENTRY(FR_INVALID_NAME),
-    FRESULT_ENTRY(FR_INVALID_DRIVE),
-    FRESULT_ENTRY(FR_DENIED),
-    FRESULT_ENTRY(FR_EXIST),
-    FRESULT_ENTRY(FR_RW_ERROR),
-    FRESULT_ENTRY(FR_WRITE_PROTECTED),
-    FRESULT_ENTRY(FR_NOT_ENABLED),
-    FRESULT_ENTRY(FR_NO_FILESYSTEM),
-    FRESULT_ENTRY(FR_INVALID_OBJECT),
-    FRESULT_ENTRY(FR_MKFS_ABORTED)
-};
 
 //file processing
 static FATFS g_sFatFs;
@@ -84,14 +61,11 @@ volatile unsigned long g_ulFlags;
 static unsigned long g_ulBytesRemaining;
 static unsigned short g_usMinutes;
 static unsigned short g_usSeconds;
-static unsigned int g_uiMinutes;
-static unsigned int g_uiSeconds;
+static unsigned short g_usMinutesPlayed;
+static unsigned short g_usSecondsPlayed;
 
 tWaveHeader g_sWaveHeader;
-
-void OnListBoxChange(tWidget *pWidget, short usSelected);
-void OnBackBtnPress(tWidget *pWidget);
-static int PopulateFileListBox(tBoolean bRedraw);
+unsigned int current_page;		//current page on screen
 
 extern tCanvasWidget g_sListBackground;
 extern tCanvasWidget g_sDetailBackground;
@@ -99,13 +73,31 @@ extern tCanvasWidget g_sHeading;
 extern tPushButtonWidget g_sBackBtn;
 extern tCanvasWidget g_sProgressText;
 extern tCanvasWidget g_sTextFrame;
+extern tCanvasWidget g_sListHeading;
+
+void OnListBoxChange(tWidget *pWidget, short usSelected);
+void OnBackBtnPress(tWidget *pWidget);
+static int PopulateFileListBox(tBoolean bRedraw);
 
 //file list
 ListBox(g_sDirList, &g_sListBackground, 0, 0,
         &g_sKitronix320x240x16_SSD2119,
-        0, 0, 320, 240, LISTBOX_STYLE_OUTLINE, ClrBlack, ClrDarkBlue,
-        ClrSilver, ClrWhite, ClrWhite, &g_sFontCmss12, g_ppcDirListStrings,
+        0, 30, 320, 210, 0, ClrWhite, 0x00bdbdbd,
+        ClrBlack, ClrBlack, ClrSilver, &g_sFontCmss12, g_ppcDirListStrings,
         NUM_LIST_STRINGS, 0, OnListBoxChange);
+
+Canvas(g_sListBackground, WIDGET_ROOT, 0, &g_sListHeading, 
+      &g_sKitronix320x240x16_SSD2119, 0, 0, 320, 240,
+      CANVAS_STYLE_FILL, ClrBlack, 0, 0, 0, 0, 0, 0);
+
+Canvas(g_sDetailBackground,WIDGET_ROOT,0,&g_sTextFrame,
+	&g_sKitronix320x240x16_SSD2119,0,30,320,210,
+	CANVAS_STYLE_FILL,ClrWhite,0,0,0,0,0,0);
+
+Canvas(g_sListHeading, &g_sListBackground, &g_sDirList, 0,
+       &g_sKitronix320x240x16_SSD2119, 0, 0, 320, 30,
+       (CANVAS_STYLE_FILL | CANVAS_STYLE_TEXT),
+       0x0058A7F8, 0, ClrWhite, &g_sFontCm20, "List", 0, 0);
 
 Canvas(g_sHeading, WIDGET_ROOT, &g_sDetailBackground, &g_sBackBtn,
        &g_sKitronix320x240x16_SSD2119, 0, 0, 320, 30,
@@ -123,31 +115,10 @@ Canvas(g_sTextFrame,&g_sDetailBackground,0,&g_sProgressText,
 	CANVAS_STYLE_FILL,
 	ClrWhite,0,0,0,"",0,0);
 
-Canvas(g_sProgressText,&g_sDetailBackground,0,0,
+Canvas(g_sProgressText,&g_sTextFrame,0,0,
 	&g_sKitronix320x240x16_SSD2119,0,80,320,40,
 	CANVAS_STYLE_TEXT_HCENTER | CANVAS_STYLE_TEXT,
 	ClrWhite,0,ClrBlack,&g_sFontCm20,"",0,0);
-									 
-/*Canvas(g_sListBackground, WIDGET_ROOT, 0, 0,
-       &g_sKitronix320x240x16_SSD2119,    0, 0, 320, 240,
-       CANVAS_STYLE_FILL, ClrBlack, 0, 0, 0, 0, 0, 0);	*/
-			 
-
-// 屏幕右侧的音量调节
-#define INITIAL_VOLUME_PERCENT 50
-/*Slider(g_sSlider, &g_sListBackground, 0, 0,
-       &g_sKitronix320x240x16_SSD2119, 300, 30, 20, 180, 0, 100,
-       INITIAL_VOLUME_PERCENT, (SL_STYLE_FILL | SL_STYLE_BACKG_FILL |
-       SL_STYLE_OUTLINE | SL_STYLE_VERTICAL), ClrBlue, ClrBlack, ClrWhite,
-       ClrWhite, ClrWhite, 0, 0, 0, 0, OnSliderChange);	*/
-
-Canvas(g_sListBackground, WIDGET_ROOT, 0, &g_sDirList, 
-      &g_sKitronix320x240x16_SSD2119, 0, 0, 320, 240,
-      CANVAS_STYLE_FILL, ClrBlack, 0, 0, 0, 0, 0, 0);
-
-Canvas(g_sDetailBackground,WIDGET_ROOT,0,&g_sTextFrame,
-	&g_sKitronix320x240x16_SSD2119,0,30,320,240,
-	CANVAS_STYLE_FILL,ClrWhite,0,0,0,0,0,0);
 			
 
 // 屏幕右侧音量变化。
@@ -177,11 +148,6 @@ StringFromFresult(FRESULT fresult)
             return(g_sFresultStrings[uIdx].pcResultStr);
         }
     }
-
-    //
-    // At this point no matching code was found, so return a
-    // string indicating unknown error.
-    //
     return("UNKNOWN ERROR CODE");
 }
 
@@ -315,8 +281,8 @@ WaveOpen(FIL *pFile, const char *pcFileName, tWaveHeader *pWaveHeader)
     g_usSeconds = pWaveHeader->ulDataSize/pWaveHeader->ulAvgByteRate;		 //the length of the song?
     g_usMinutes = g_usSeconds/60;
     g_usSeconds -= g_usMinutes*60;
-	g_uiMinutes = (int)g_usMinutes;
-	g_uiSeconds = (int)g_usSeconds;
+	g_usMinutesPlayed = 0;
+	g_usSecondsPlayed = 0;
     g_ulBytesRemaining = pWaveHeader->ulDataSize;
     if((pWaveHeader->usNumChannels == 1) && (pWaveHeader->usBitsPerSample == 8))
     {
@@ -326,7 +292,7 @@ WaveOpen(FIL *pFile, const char *pcFileName, tWaveHeader *pWaveHeader)
                    pWaveHeader->usNumChannels);	
 	UARTprintf("open .wav file succeed\n");
 
-	usprintf(music_progress, "00:00/%02d:%02d",g_uiMinutes,g_uiSeconds);
+	usprintf(music_progress, "00:00/%02d:%02d",g_usMinutes,g_usSeconds);
 	CanvasTextSet(&g_sProgressText,music_progress);		
 	WidgetPaint((tWidget*)&g_sProgressText);
 
@@ -419,6 +385,7 @@ void
 SysTickHandler(void)
 {
     disk_timerproc();
+	lwIPTimer(SYSTICKMS);
 }
 
 void Timer_ISR(void){
@@ -426,15 +393,18 @@ void Timer_ISR(void){
 	ulStatus = TimerIntStatus(TIMER0_BASE,true);				//read the interrup status
 	TimerIntClear(TIMER0_BASE,ulStatus);	//clear the interrupt
 		
-	/*if(ulStatus&TIMER_TIMA_TIMEOUT&&current_page==PAGE_DETAIL) 			//identify the interrupt source
+	if(ulStatus&TIMER_TIMA_TIMEOUT&&current_page==PAGE_DETAIL) 			//identify the interrupt source
 	{ 
-		usprintf(music_progress, "00:00/%2d:%2d",
-		g_ulBytesPlayed/g_sWaveHeader.ulAvgByteRate,
-		g_ulBytesPlayed%g_sWaveHeader.ulAvgByteRate,
-		g_uiMinutes,g_uiSeconds);
+		g_usSecondsPlayed = g_ulBytesPlayed/g_sWaveHeader.ulAvgByteRate;
+		g_usMinutesPlayed = g_usSecondsPlayed/60;
+		g_usSecondsPlayed %= 60;
+		usprintf(music_progress, "%02d:%02d/%02d:%02d",
+		g_usMinutesPlayed,
+		g_usSecondsPlayed,
+		g_usMinutes,g_usSeconds);
 		CanvasTextSet(&g_sProgressText,music_progress);
 		WidgetPaint((tWidget*)&g_sTextFrame);
-	}*/		
+	}		
 }
 
 static int
@@ -488,16 +458,26 @@ int
 Cmd_ls(int argc, char *argv[])
 {
     unsigned long ulTotalSize, ulItemCount, ulFileCount, ulDirCount;
+	char* output_buffer;
+	char inner_buffer[128];
+	char useEthernet;//output the result to UART or Ethernet?
     FRESULT fresult;
     fresult = f_opendir(&g_sDirObject, g_cCwdBuf);
+	
+	if(argc==0)useEthernet = 0;
+	else{
+		useEthernet = 1;
+		output_buffer = argv[0];
+	}
 
-    //
-    // Check for error and return if there is a problem.
-    //
     if(fresult != FR_OK)
     {
-		UARTprintf("Error from SD Card: %s\n",(char*)StringFromFresult(fresult));
-        return(fresult);
+		if(useEthernet)
+			usprintf(output_buffer,
+			"Error from SD Card: %s\n",(char*)StringFromFresult(fresult));	
+		else
+			UARTprintf("Error from SD Card: %s\n",(char*)StringFromFresult(fresult));
+		return(fresult);
     }
 
     ulTotalSize = 0;
@@ -505,14 +485,6 @@ Cmd_ls(int argc, char *argv[])
     ulDirCount = 0;
     ulItemCount = 0;
 
-    //
-    // Give an extra blank line before the listing.
-    //
-    UARTprintf("\n");
-
-    //
-    // Enter loop to enumerate through all directory entries.
-    //
     for(;;)
     {
         //
@@ -525,7 +497,10 @@ Cmd_ls(int argc, char *argv[])
         //
         if(fresult != FR_OK)
         {
-			UARTprintf("error reading dir\n");
+			if(useEthernet)
+				usprintf(output_buffer,"error reading dir\n");
+			else
+				UARTprintf("error reading dir\n");		
             return(fresult);
         }
 
@@ -542,19 +517,17 @@ Cmd_ls(int argc, char *argv[])
         // Print the entry information on a single line with formatting
         // to show the attributes, date, time, size, and name.
         //
-        UARTprintf("%c%c%c%c%c %u/%02u/%02u %02u:%02u %9u  %s\n",
-                 (g_sFileInfo.fattrib & AM_DIR) ? 'D' : '-',
-                 (g_sFileInfo.fattrib & AM_RDO) ? 'R' : '-',
-                 (g_sFileInfo.fattrib & AM_HID) ? 'H' : '-',
-                 (g_sFileInfo.fattrib & AM_SYS) ? 'S' : '-',
-                 (g_sFileInfo.fattrib & AM_ARC) ? 'A' : '-',
-                 (g_sFileInfo.fdate >> 9) + 1980,
-                 (g_sFileInfo.fdate >> 5) & 15,
-                 g_sFileInfo.fdate & 31,
-                 (g_sFileInfo.ftime >> 11),
-                 (g_sFileInfo.ftime >> 5) & 63,
-                 g_sFileInfo.fsize,
-                 g_sFileInfo.fname);
+		if(useEthernet){
+			usprintf(inner_buffer,"[%c] %s\n",
+                     (g_sFileInfo.fattrib & AM_DIR) ? 'D' : 'F',
+                      g_sFileInfo.fname);
+			strcpy(output_buffer,inner_buffer);
+			output_buffer = output_buffer + strlen(inner_buffer);
+		}
+		else
+			UARTprintf("[%c] %s\n",
+                     (g_sFileInfo.fattrib & AM_DIR) ? 'D' : 'F',
+                      g_sFileInfo.fname);
 
         //
         // If the attribute is directory, then increment the directory count.
@@ -585,65 +558,42 @@ Cmd_ls(int argc, char *argv[])
     return(0);
 }
 
-#ifdef DEBUG
-void
-__error__(char *pcFilename, unsigned long ulLine)
-{
-}
-#endif
-
 int
 main(void)
 {
-    FRESULT fresult;
     ROM_SysCtlClockSet(SYSCTL_SYSDIV_4 | SYSCTL_USE_PLL | SYSCTL_OSC_MAIN |
-                       SYSCTL_XTAL_16MHZ);
-	
+                       SYSCTL_XTAL_16MHZ);	
 	GPIOInitial();
 	UART0Initial();
 	TimerInitial();
-
     UARTStdioInit(0);
-
     PinoutSet();
     ROM_SysCtlPeripheralEnable(SYSCTL_PERIPH_UDMA);
     SysCtlDelay(10);
     uDMAControlBaseSet(&sDMAControlTable[0]);
     uDMAEnable();
-	
-
     ROM_SysTickPeriodSet(SysCtlClockGet() / TICKS_PER_SECOND);
     ROM_SysTickEnable();
     ROM_SysTickIntEnable();
-
     ROM_IntMasterEnable();
-
     Kitronix320x240x16_SSD2119Init();
-
     TouchScreenInit();
-
     TouchScreenCallbackSet(WidgetPointerMessage);
+	EthernetInitial();
 
 	WidgetAdd(WIDGET_ROOT,(tWidget*)&g_sListBackground);
 	WidgetAdd((tWidget*)&g_sListBackground,(tWidget*)&g_sDirList);
     WidgetPaint(WIDGET_ROOT);
     WidgetMessageQueueProcess();
 
-    fresult = f_mount(0, &g_sFatFs);
-    if(fresult != FR_OK)
-    {
-        return(1);
-    }
+    if(f_mount(0, &g_sFatFs) != FR_OK)return(1);
+
     PopulateFileListBox(true);
 
-	Cmd_ls(0,NULL);
-
+	current_page = PAGE_LIST;
     g_ulFlags = 0;
     SoundInit(0);
-
-	/*if(WaveOpen(&g_sFileObject, "bara.wav", &g_sWaveHeader)== FR_OK){
-    	g_ulFlags |= BUFFER_PLAYING;
-	}*/
+	TCPInitial();
 
     while(1)
     {
@@ -664,7 +614,9 @@ void OnListBoxChange(tWidget *pWidget, short usSelected){
 			//cd to the dir..
 		}	
 		else{
+			current_page = PAGE_DETAIL;
 			WidgetRemove((tWidget*)&g_sListBackground);
+			//WidgetRemove((tWidget*)&g_sListHeading);
 			WidgetAdd(WIDGET_ROOT,(tWidget*)&g_sHeading);
 			WidgetAdd(WIDGET_ROOT,(tWidget*)&g_sDetailBackground);
 			WidgetPaint(WIDGET_ROOT);
@@ -674,10 +626,13 @@ void OnListBoxChange(tWidget *pWidget, short usSelected){
 	}
 }
 
+//go back to list page
 void OnBackBtnPress(tWidget *pWidget){
+	current_page = PAGE_LIST;
 	WidgetRemove((tWidget*)&g_sHeading);
 	WidgetRemove((tWidget*)&g_sDetailBackground);
 	WidgetAdd(WIDGET_ROOT,(tWidget*)&g_sListBackground);
+	//WidgetAdd(WIDGET_ROOT,(tWidget*)&g_sListHeading);
 	WidgetPaint(WIDGET_ROOT);
 }
 

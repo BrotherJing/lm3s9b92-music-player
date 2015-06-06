@@ -346,7 +346,7 @@
               <MiscControls></MiscControls>
               <Define>rvmdk PART_LM3S9B96 TARGET_IS_TEMPEST_RB1</Define>
               <Undefine></Undefine>
-              <IncludePath>..\musicplayer;H:\tempInstall\StellarisWare;H:\tempInstall\StellarisWare\boards\Smart-9B92-C3;H:\tempInstall\StellarisWare\third_party</IncludePath>
+              <IncludePath>..\musicplayer;H:\tempInstall\StellarisWare;H:\tempInstall\StellarisWare\boards\Smart-9B92-C3;H:\tempInstall\StellarisWare\third_party;H:\tempInstall\StellarisWare\third_party\lwip-1.3.2\ports\stellaris\include;H:\tempInstall\StellarisWare\third_party\lwip-1.3.2\apps;H:\tempInstall\StellarisWare\third_party\lwip-1.3.2\src\include;H:\tempInstall\StellarisWare\third_party\lwip-1.3.2\src\include\ipv4</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -442,29 +442,14 @@
               <FilePath>H:\tempInstall\StellarisWare\utils\uartstdio.c</FilePath>
             </File>
             <File>
-              <FileName>UARTConfigure.c</FileName>
+              <FileName>locator.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\UARTConfigure.c</FilePath>
+              <FilePath>H:\tempInstall\StellarisWare\utils\locator.c</FilePath>
             </File>
             <File>
-              <FileName>UARTISR.c</FileName>
+              <FileName>lwiplib.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\UARTISR.c</FilePath>
-            </File>
-            <File>
-              <FileName>GPIODriverConfigure.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\GPIODriverConfigure.c</FilePath>
-            </File>
-            <File>
-              <FileName>SysCtlConfigure.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\SysCtlConfigure.c</FilePath>
-            </File>
-            <File>
-              <FileName>TimerConfigure.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\TimerConfigure.c</FilePath>
+              <FilePath>H:\tempInstall\StellarisWare\utils\lwiplib.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -480,6 +465,51 @@
               <FileName>grlib.lib</FileName>
               <FileType>4</FileType>
               <FilePath>H:\tempInstall\StellarisWare\grlib\rvmdk\grlib.lib</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>ISR</GroupName>
+          <Files>
+            <File>
+              <FileName>UARTISR.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\UARTISR.c</FilePath>
+            </File>
+            <File>
+              <FileName>TCPhandler.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\TCPhandler.c</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>Configure</GroupName>
+          <Files>
+            <File>
+              <FileName>SysCtlConfigure.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\SysCtlConfigure.c</FilePath>
+            </File>
+            <File>
+              <FileName>UARTConfigure.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\UARTConfigure.c</FilePath>
+            </File>
+            <File>
+              <FileName>GPIODriverConfigure.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\GPIODriverConfigure.c</FilePath>
+            </File>
+            <File>
+              <FileName>TimerConfigure.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\TimerConfigure.c</FilePath>
+            </File>
+            <File>
+              <FileName>EthernetConfigure.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\EthernetConfigure.c</FilePath>
             </File>
           </Files>
         </Group>

@@ -10,6 +10,8 @@
 #include "FileHelper.h"
 #include "main.h"
 
+extern int Cmd_ls(int argc, char *argv[]);
+
 void UART0_ISR(void)
 {
 	unsigned long ulStatus;
@@ -33,9 +35,17 @@ void UART0_ISR(void)
 	}	 
 }
 
+//parse the received command
 void parseCmd(const char* cmd){
 	if(strncmp(cmd,"play",4)==0){
 		UARTprintf("play what? %s\n",cmd+5);
 		switchMusic(cmd+5);	
+	}
+	if(strncmp(cmd,"cd",2)==0){
+		UARTprintf("cd to %s\n",cmd+3);
+
 	}		
+	if(strncmp(cmd,"ls",2)==0){
+		Cmd_ls(0,NULL);
+	}
 }

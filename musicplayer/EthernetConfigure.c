@@ -1,6 +1,9 @@
 #include "HardwareLibrary.h"
 #include "LuminaryDriverLibrary.h"
-										
+							
+#include "grlib/grlib.h"
+#include "grlib/widget.h"
+#include "grlib/canvas.h"			
 #include "utils/locator.h"
 #include "utils/lwiplib.h"			   
 #include "utils/uartstdio.h"
@@ -57,6 +60,9 @@ void EthernetInitial(void){
 // Required by lwIP library to support any host-related timer functions.
 //
 //*****************************************************************************
+char g_cIPAddress[20];																		    
+extern tCanvasWidget g_sListHeading;
+
 void lwIPHostTimerHandler(void)
 {
     unsigned long ulIPAddress;
@@ -91,9 +97,15 @@ void lwIPHostTimerHandler(void)
         //
         // Display the new IP address.
         //
-        UARTprintf("\rIP: %d.%d.%d.%d       \n", ulIPAddress & 0xff,
+		usprintf(g_cIPAddress,"%d.%d.%d.%d", ulIPAddress & 0xff,
                    (ulIPAddress >> 8) & 0xff, (ulIPAddress >> 16) & 0xff,
                    (ulIPAddress >> 24) & 0xff);
+        UARTprintf("\rIP: %d.%d.%d.%d       \n",ulIPAddress & 0xff,
+                   (ulIPAddress >> 8) & 0xff, (ulIPAddress >> 16) & 0xff,
+                   (ulIPAddress >> 24) & 0xff);
+		UARTprintf("%s\n",g_cIPAddress);
+		CanvasTextSet(&g_sListHeading,g_cIPAddress); 
+		WidgetPaint((tWidget*)&g_sListHeading);
 
         //
         // Save the new IP address.
@@ -115,5 +127,6 @@ void lwIPHostTimerHandler(void)
         UARTprintf("Gateway: %d.%d.%d.%d\n", ulIPAddress & 0xff,
                    (ulIPAddress >> 8) & 0xff, (ulIPAddress >> 16) & 0xff,
                    (ulIPAddress >> 24) & 0xff);
+
     }
 }

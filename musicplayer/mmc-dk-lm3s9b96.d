@@ -1,9 +1,0 @@
-mmc-dk-lm3s9b96.o: H:\tempInstall\StellarisWare\third_party\fatfs\port\mmc-dk-lm3s9b96.c
-mmc-dk-lm3s9b96.o: H:\tempInstall\StellarisWare\inc/hw_memmap.h
-mmc-dk-lm3s9b96.o: H:\tempInstall\StellarisWare\inc/hw_types.h
-mmc-dk-lm3s9b96.o: H:\tempInstall\StellarisWare\driverlib/gpio.h
-mmc-dk-lm3s9b96.o: H:\tempInstall\StellarisWare\driverlib/ssi.h
-mmc-dk-lm3s9b96.o: H:\tempInstall\StellarisWare\driverlib/sysctl.h
-mmc-dk-lm3s9b96.o: H:\tempInstall\StellarisWare\third_party\fatfs/src/diskio.h
-mmc-dk-lm3s9b96.o: H:\tempInstall\StellarisWare\third_party\fatfs/src/integer.h
-mmc-dk-lm3s9b96.o: ..\musicplayer\drivers/ssi_hw.h

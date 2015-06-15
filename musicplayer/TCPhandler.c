@@ -22,10 +22,9 @@
 #include "TCPhandler.h"
 #include "main.h"
 								
-extern TheSysClock;
+extern unsigned long TheSysClock;
 extern int current_page;
 extern FATFS* g_sFatFs;
-//const static char testdata[] = {"hello world tcp"};
 unsigned char buffer[1536];
 unsigned long buffer_len;
 unsigned long file_size,received_size;
@@ -40,7 +39,6 @@ void buf_receive(struct pbuf *p){
 	int i;
 	unsigned long tot_len;
 	unsigned long len;
-	//unsigned long *buf_ptr;
 	unsigned char *buf_ptr_char;
 
 	tot_len = p->tot_len;
@@ -51,20 +49,14 @@ void buf_receive(struct pbuf *p){
 		for(i=0;i<q->len;++i,++len){
 			*(buffer+len)=*buf_ptr_char++;
 		}
-		/*if(i<q->len){
-			buf_ptr_char = (unsigned char *)buf_ptr;
-			for(;i<q->len;++i,++len){
-				*(buffer+len)=*buf_ptr_char++;	
-			}
-		}*/
 		q=q->next;				
 	}
 	
 	buffer[tot_len] = '\0';
 	buffer_len = tot_len;
 
-	UARTprintf("the content is %s: \n",buffer);
-	UARTprintf("\n");
+	//UARTprintf("the content is %s: \n",buffer);
+	//UARTprintf("\n");
 }
 
 err_t my_recv(void *arg, struct tcp_pcb *pcb, struct pbuf *p, err_t err){
@@ -76,7 +68,7 @@ err_t my_recv(void *arg, struct tcp_pcb *pcb, struct pbuf *p, err_t err){
 		tcp_recved(pcb,p->tot_len);
 		cmd = buffer+REQ_HEAD_LEN;
 		if(strncmp(buffer,REQUEST_HEAD,REQ_HEAD_LEN)==0){
-			UARTprintf("req head detected\n");
+			//UARTprintf("req head detected\n");
 			for(i=REQ_HEAD_LEN;i<p->len-REQ_END_LEN;i++){//check if the cmd is complete.
 				if(strncmp(buffer+i,REQUEST_END,REQ_END_LEN)==0)break;
 			}
@@ -87,7 +79,7 @@ err_t my_recv(void *arg, struct tcp_pcb *pcb, struct pbuf *p, err_t err){
 			}		
 			//strncpy(buffer,cmd,i-4);
 			buffer[i]='\0';
-			UARTprintf("in the buffer:%s\n",cmd);
+			//UARTprintf("in the buffer:%s\n",cmd);
 			parseTCPCmd(pcb,cmd);
 		}
 		else if(isFileReceiving==1){
@@ -120,14 +112,13 @@ void TCPInitial(void){
 	tcp_accept(pcb, my_accept);
 
 	isFileReceiving = 0;
-	//g_sOutputFile.fs=&g_sFatFs;
 }
 
 void parseTCPCmd(struct tcp_pcb *pcb,char* cmd){
 	char* argv[1];
 	char* divider;
 	if(strncmp(cmd,"play",4)==0){
-		UARTprintf("play what? %s\n",cmd+5);
+		//UARTprintf("play what? %s\n",cmd+5);
 		if(current_page!=PAGE_DETAIL)
 			switchPage(PAGE_DETAIL);
 		switchMusic(cmd+5);	
@@ -144,18 +135,13 @@ void parseTCPCmd(struct tcp_pcb *pcb,char* cmd){
 			UARTprintf("ls fail\n");
 		}
 	}
+	else if(strncmp(cmd,"res",3)==0){
+		resumeMusic();
+	}
+	else if(strncmp(cmd,"pau",3)==0){
+		pauseMusic();
+	}
 	else if(strncmp(cmd,"file",4)==0){
-		/*if(*(cmd+5)=='0'){
-			//start receiving file
-			UARTprintf("receiving file: %s\n",cmd+7);
-			if(openFileWrite(cmd+7)==FR_OK){
-				isFileReceiving = 1;
-			}
-		}else{
-			isFileReceiving = 0;
-			f_close(&g_sOutputFile);
-			UARTprintf("finish receiving file\n");
-		}*/
 		divider = splitFileInfo(cmd+5);//the divider of file size and file name
 		received_size = 0;
 		UARTprintf("receiving file: %s\n",divider+1);
@@ -179,7 +165,7 @@ FRESULT openFileWrite(const char* filename){
 	FRESULT result;
 	result = f_open(&g_sOutputFile, filename, FA_CREATE_NEW);
 	result = f_open(&g_sOutputFile, filename, FA_WRITE);
-	UARTprintf("open file:%s\n",filename);
+	//UARTprintf("open file:%s\n",filename);
 	if(result!=FR_OK){
 		UARTprintf("fail to open output file:%s\n",(char*)StringFromFresult(result));
 	}
@@ -190,19 +176,19 @@ void writeFile(void){
 	FRESULT result = FR_OK;
 	unsigned short usCount;
 	unsigned long ulCount = 0;
-	UARTprintf("before write file..\n");
+	//UARTprintf("before write file..\n");
 	result = f_write(&g_sOutputFile,buffer,buffer_len,&usCount);
 	usCount = buffer_len;
+	//SysCtlDelay(TheSysClock/10);	   	
 	g_sOutputFile.fs = (FATFS*)&g_sFatFs;
-	SysCtlDelay(TheSysClock/10);
-	UARTprintf("after write file..\n");
+	//UARTprintf("after write file..\n");
 	if(result!=FR_OK){
 		finishReceiving();
 		UARTprintf("fail to write file:%s\n",(char*)StringFromFresult(result));
 	}else{
 		*(unsigned short*)(&(ulCount))= usCount;
 		received_size += ulCount;
-		UARTprintf("current %d bytes,reveive %d bytes,full size %d bytes\n",usCount,received_size,file_size);
+		UARTprintf("%d/%d\n",received_size,file_size);
 	}
 	if(received_size>=file_size){
 		finishReceiving();

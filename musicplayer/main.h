@@ -38,6 +38,8 @@ static tFresultString g_sFresultStrings[] =
 };
 
 void switchMusic(const char* name);			   
+void pauseMusic(void);
+void resumeMusic(void);
 void switchPage(int page);
 int Cmd_ls(int argc, char *argv[]);		  
 const char *StringFromFresult(FRESULT fresult);

@@ -74,21 +74,22 @@ extern tPushButtonWidget g_sBackBtn;
 extern tCanvasWidget g_sProgressText;
 extern tCanvasWidget g_sTextFrame;
 extern tCanvasWidget g_sListHeading;
+extern tPushButtonWidget g_sPause;		
+extern tPushButtonWidget g_sResume;
 
 void OnListBoxChange(tWidget *pWidget, short usSelected);
 void OnBackBtnPress(tWidget *pWidget);
-//static int PopulateFileListBox(tBoolean bRedraw);
 
 //file list
 ListBox(g_sDirList, &g_sListBackground, 0, 0,
         &g_sKitronix320x240x16_SSD2119,
-        0, 30, 320, 210, 0, ClrWhite, 0x00bdbdbd,
-        ClrBlack, ClrBlack, ClrSilver, &g_sFontCmss12, g_ppcDirListStrings,
+        5, 35, 310, 205, 0, ClrWhite, 0x00bdbdbd,
+        ClrBlack, ClrBlack, ClrSilver, &g_sFontCmss14, g_ppcDirListStrings,
         NUM_LIST_STRINGS, 0, OnListBoxChange);
 
 Canvas(g_sListBackground, WIDGET_ROOT, 0, &g_sListHeading, 
       &g_sKitronix320x240x16_SSD2119, 0, 0, 320, 240,
-      CANVAS_STYLE_FILL, ClrBlack, 0, 0, 0, 0, 0, 0);
+      CANVAS_STYLE_FILL, ClrWhite, 0, 0, 0, 0, 0, 0);
 
 Canvas(g_sDetailBackground,WIDGET_ROOT,0,&g_sTextFrame,
 	&g_sKitronix320x240x16_SSD2119,0,30,320,210,
@@ -97,12 +98,12 @@ Canvas(g_sDetailBackground,WIDGET_ROOT,0,&g_sTextFrame,
 Canvas(g_sListHeading, &g_sListBackground, &g_sDirList, 0,
        &g_sKitronix320x240x16_SSD2119, 0, 0, 320, 30,
        (CANVAS_STYLE_FILL | CANVAS_STYLE_TEXT),
-       0x0058A7F8, 0, ClrWhite, &g_sFontCm20, "List", 0, 0);
+       0x0058A7F8, 0, ClrWhite, &g_sFontCmss20, "", 0, 0);
 
 Canvas(g_sHeading, WIDGET_ROOT, &g_sDetailBackground, &g_sBackBtn,
        &g_sKitronix320x240x16_SSD2119, 0, 0, 320, 30,
        (CANVAS_STYLE_FILL | CANVAS_STYLE_TEXT),
-       0x0058A7F8, 0, ClrWhite, &g_sFontCm20, "Music", 0, 0);
+       0x0058A7F8, 0, ClrWhite, &g_sFontCmss20, "Music", 0, 0);
 
 RectangularButton(g_sBackBtn,&g_sHeading,0,0,
 	&g_sKitronix320x240x16_SSD2119,0,0,30,30,
@@ -110,7 +111,7 @@ RectangularButton(g_sBackBtn,&g_sHeading,0,0,
 	0x0058A7F8,0x0058A7F8,0,ClrWhite,
 	&g_sFontCmss22b,"..",0,0,0,0,OnBackBtnPress);
 
-Canvas(g_sTextFrame,&g_sDetailBackground,0,&g_sProgressText,
+Canvas(g_sTextFrame,&g_sDetailBackground,&g_sPause,&g_sProgressText,
 	&g_sKitronix320x240x16_SSD2119,0,80,320,40,
 	CANVAS_STYLE_FILL,
 	ClrWhite,0,0,0,"",0,0);
@@ -118,15 +119,19 @@ Canvas(g_sTextFrame,&g_sDetailBackground,0,&g_sProgressText,
 Canvas(g_sProgressText,&g_sTextFrame,0,0,
 	&g_sKitronix320x240x16_SSD2119,0,80,320,40,
 	CANVAS_STYLE_TEXT_HCENTER | CANVAS_STYLE_TEXT,
-	ClrWhite,0,ClrBlack,&g_sFontCm20,"",0,0);
-			
+	ClrWhite,0,ClrBlack,&g_sFontCmss20,"",0,0);
 
-// ∆¡ƒª”“≤‡“Ù¡ø±‰ªØ°£
-void
-OnSliderChange(tWidget *pWidget, long lValue)
-{
-    SoundVolumeSet(lValue);
-}
+RectangularButton(g_sPause,&g_sDetailBackground,&g_sResume,0,
+	&g_sKitronix320x240x16_SSD2119,90,150,60,40,
+	(PB_STYLE_TEXT|PB_STYLE_FILL),
+	0x0058A7F8,0x0058A7F8,0,ClrWhite,
+	&g_sFontCmss14b,"PAUSE",0,0,0,0,pauseMusic);
+
+RectangularButton(g_sResume,&g_sDetailBackground,0,0,
+	&g_sKitronix320x240x16_SSD2119,170,150,60,40,
+	(PB_STYLE_TEXT|PB_STYLE_FILL),
+	0x0058A7F8,0x0058A7F8,0,ClrWhite,
+	&g_sFontCmss14b,"RESUME",0,0,0,0,resumeMusic);
 
 const char *
 StringFromFresult(FRESULT fresult)
@@ -177,12 +182,12 @@ WaveOpen(FIL *pFile, const char *pcFileName, tWaveHeader *pWaveHeader)
     Result = f_open(pFile, pcFileName, FA_READ);
     if(Result != FR_OK)
     {
-		UARTprintf("fail to open file:%s\n",(char*)StringFromFresult(Result));
+		//UARTprintf("fail to open file:%s\n",(char*)StringFromFresult(Result));
 		while(Result!=FR_OK){
 			f_mount(0, &g_sFatFs);
-			SysCtlDelay(TheSysClock/100);
+			SysCtlDelay(TheSysClock/10);
 			Result = f_open(pFile, pcFileName, FA_READ);
-			UARTprintf("fail to open file:%s\n",(char*)StringFromFresult(Result));
+			//UARTprintf("fail to open file:%s\n",(char*)StringFromFresult(Result));
 		}
     }
     Result = f_read(pFile, g_pucBuffer, 12, &usCount);
@@ -344,6 +349,11 @@ WavePlay(FIL *pFile, tWaveHeader *pWaveHeader)
 
     while(1)
     {
+		if(!(g_ulFlags & BUFFER_PLAYING)){
+			SysCtlDelay(TheSysClock/100);	
+        	WidgetMessageQueueProcess();
+			continue;
+		}
         IntDisable(INT_I2S0);
         if(g_ulFlags & BUFFER_BOTTOM_EMPTY)
         {
@@ -407,11 +417,11 @@ int Cmd_ls(int argc, char *argv[])
     fresult = f_opendir(&g_sDirObject, g_cCwdBuf);
 	
 	if(current_page!=PAGE_LIST)return 0;
+	ListBoxClear(&g_sDirList);
+	WidgetPaint((tWidget *)&g_sDirList);
 
 	if(argc==0){
 		useEthernet = 0;
-		ListBoxClear(&g_sDirList);
-		WidgetPaint((tWidget *)&g_sDirList);
 	}
 	else{
 		useEthernet = 1;
@@ -423,11 +433,7 @@ int Cmd_ls(int argc, char *argv[])
 
     if(fresult != FR_OK)
     {
-		if(useEthernet)
-			usprintf(output_buffer,
-			"Error from SD Card: %s\n",(char*)StringFromFresult(fresult));	
-		else
-			UARTprintf("Error from SD Card: %s\n",(char*)StringFromFresult(fresult));
+		UARTprintf("Error from SD Card: %s\n",(char*)StringFromFresult(fresult));
 		return(fresult);
     }
 
@@ -453,21 +459,18 @@ int Cmd_ls(int argc, char *argv[])
         {
             break;
         }
-
+		
+		
+		usprintf(g_pcFilenames[ulItemCount], "[%c] %s",
+                 (g_sFileInfo.fattrib & AM_DIR) ? 'D' : 'F',
+                  g_sFileInfo.fname);
+		UARTprintf("%s\n",g_pcFilenames[ulItemCount]);	
 		if(useEthernet){
-			usprintf(inner_buffer,"[%c] %s\n",
-                     (g_sFileInfo.fattrib & AM_DIR) ? 'D' : 'F',
-                      g_sFileInfo.fname);
+			usprintf(inner_buffer,"%s\n",g_pcFilenames[ulItemCount]);
 			strcpy(output_buffer,inner_buffer);
 			output_buffer = output_buffer + strlen(inner_buffer);
-		}
-		else{
-			usprintf(g_pcFilenames[ulItemCount], "[%c] %s",
-                     (g_sFileInfo.fattrib & AM_DIR) ? 'D' : 'F',
-                      g_sFileInfo.fname);
-			UARTprintf("%s\n",g_pcFilenames[ulItemCount]);
-			ListBoxTextAdd(&g_sDirList, g_pcFilenames[ulItemCount]);
-		}
+		}	 
+		ListBoxTextAdd(&g_sDirList, g_pcFilenames[ulItemCount]);
 
         if(g_sFileInfo.fattrib & AM_DIR){
             ulDirCount++;
@@ -477,7 +480,8 @@ int Cmd_ls(int argc, char *argv[])
             ulTotalSize += g_sFileInfo.fsize;
         }
         ulItemCount++;
-    }
+    }				 
+	WidgetPaint(WIDGET_ROOT);
     return(0);
 }
 
@@ -533,12 +537,6 @@ void OnListBoxChange(tWidget *pWidget, short usSelected){
 			//cd to the dir..
 		}	
 		else{
-			/*current_page = PAGE_DETAIL;
-			WidgetRemove((tWidget*)&g_sListBackground);
-			//WidgetRemove((tWidget*)&g_sListHeading);
-			WidgetAdd(WIDGET_ROOT,(tWidget*)&g_sHeading);
-			WidgetAdd(WIDGET_ROOT,(tWidget*)&g_sDetailBackground);
-			WidgetPaint(WIDGET_ROOT);*/
 			switchPage(PAGE_DETAIL);
 			switchMusic(&g_pcFilenames[selected][4]);
 			UARTprintf("select %s\n",&g_pcFilenames[selected][4]);
@@ -548,22 +546,24 @@ void OnListBoxChange(tWidget *pWidget, short usSelected){
 
 //go back to list page
 void OnBackBtnPress(tWidget *pWidget){
-	/*current_page = PAGE_LIST;
-	WidgetRemove((tWidget*)&g_sHeading);
-	WidgetRemove((tWidget*)&g_sDetailBackground);
-	WidgetAdd(WIDGET_ROOT,(tWidget*)&g_sListBackground);
-	//WidgetAdd(WIDGET_ROOT,(tWidget*)&g_sListHeading);
-	WidgetPaint(WIDGET_ROOT);*/
 	switchPage(PAGE_LIST);
 }
 
 void switchMusic(const char* name){
-	UARTprintf("play %s,len=%d\n",name,strlen(name));
+	//UARTprintf("play %s,len=%d\n",name,strlen(name));
 	WaveClose(&g_sFileObject);
 	g_ulFlags &= ~BUFFER_PLAYING;
 	if(WaveOpen(&g_sFileObject, name, &g_sWaveHeader)== FR_OK){
 		g_ulFlags |= BUFFER_PLAYING;
 	}
+}
+
+void pauseMusic(void){
+	g_ulFlags &= ~BUFFER_PLAYING;
+}
+
+void resumeMusic(void){
+	g_ulFlags |= BUFFER_PLAYING;
 }
 
 void switchPage(int page){

@@ -39,15 +39,21 @@ void UART0_ISR(void)
 //parse the received command
 void parseCmd(const char* cmd){
 	if(strncmp(cmd,"play",4)==0){
-		UARTprintf("play what? %s\n",cmd+5);
+		//UARTprintf("play what? %s\n",cmd+5);
 		if(current_page!=PAGE_DETAIL)
 			switchPage(PAGE_DETAIL);
 		switchMusic(cmd+5);	
 	}
-	if(strncmp(cmd,"cd",2)==0){
+	else if(strncmp(cmd,"cd",2)==0){
 		UARTprintf("cd to %s\n",cmd+3);
 	}		
-	if(strncmp(cmd,"ls",2)==0){
+	else if(strncmp(cmd,"ls",2)==0){
 		Cmd_ls(0,NULL);
+	}
+	else if(strncmp(cmd,"res",3)==0){
+		resumeMusic();
+	}
+	else if(strncmp(cmd,"pau",3)==0){
+		pauseMusic();
 	}
 }

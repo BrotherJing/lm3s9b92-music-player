@@ -11,6 +11,7 @@
 #include "main.h"
 
 extern int Cmd_ls(int argc, char *argv[]);
+extern int current_page;
 
 void UART0_ISR(void)
 {
@@ -39,11 +40,12 @@ void UART0_ISR(void)
 void parseCmd(const char* cmd){
 	if(strncmp(cmd,"play",4)==0){
 		UARTprintf("play what? %s\n",cmd+5);
+		if(current_page!=PAGE_DETAIL)
+			switchPage(PAGE_DETAIL);
 		switchMusic(cmd+5);	
 	}
 	if(strncmp(cmd,"cd",2)==0){
 		UARTprintf("cd to %s\n",cmd+3);
-
 	}		
 	if(strncmp(cmd,"ls",2)==0){
 		Cmd_ls(0,NULL);

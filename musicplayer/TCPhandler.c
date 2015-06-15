@@ -2,18 +2,35 @@
 #include "LuminaryDriverLibrary.h"
 
 #include<string.h>
+#include "lwip/opt.h"
+#include "lwip/def.h"
+#include "lwip/mem.h"
+#include "lwip/pbuf.h"
+#include "lwip/sys.h"
+#include <lwip/stats.h>
+#include <lwip/snmp.h>
+#include "netif/etharp.h"
+#include "netif/ppp_oe.h"
+#include "netif/stellarisif.h"
 										
 #include "utils/locator.h"
 #include "utils/lwiplib.h"			   
-#include "utils/uartstdio.h"
+#include "utils/uartstdio.h"   
+#include "third_party/fatfs/src/ff.h"
+#include "third_party/fatfs/src/diskio.h"
 
 #include "TCPhandler.h"
-
-extern int Cmd_ls(int argc, char *argv[]);
-extern void switchMusic(const char* name);
-
-const static char testdata[] = {"hello world tcp"};
-char buffer[1024];
+#include "main.h"
+								
+extern TheSysClock;
+extern int current_page;
+extern FATFS* g_sFatFs;
+//const static char testdata[] = {"hello world tcp"};
+unsigned char buffer[1536];
+unsigned long buffer_len;
+unsigned long file_size,received_size;
+unsigned char isFileReceiving;
+FIL g_sOutputFile;
 
 const static char REQUEST_HEAD[] = {"CMD "};
 const static char REQUEST_END[] = {" END"};
@@ -21,13 +38,15 @@ const static char REQUEST_END[] = {" END"};
 void buf_receive(struct pbuf *p){
 	struct pbuf *q;
 	int i;
+	unsigned long tot_len;
 	unsigned long len;
 	//unsigned long *buf_ptr;
 	unsigned char *buf_ptr_char;
 
+	tot_len = p->tot_len;
 	len = 0;
 	q = p;
-	while(q!=NULL){
+	while(q!=NULL&&len<tot_len){
 		buf_ptr_char = q->payload;
 		for(i=0;i<q->len;++i,++len){
 			*(buffer+len)=*buf_ptr_char++;
@@ -41,31 +60,27 @@ void buf_receive(struct pbuf *p){
 		q=q->next;				
 	}
 	
-	buffer[p->tot_len-1] = '\0';
+	buffer[tot_len] = '\0';
+	buffer_len = tot_len;
 
 	UARTprintf("the content is %s: \n",buffer);
-	/*for(i=0;i<p->tot_len;++i){
-		UARTprintf("%c",buffer[i]);
-	}*/	
 	UARTprintf("\n");
 }
 
 err_t my_recv(void *arg, struct tcp_pcb *pcb, struct pbuf *p, err_t err){
 	
-	//char *data;
-	char *cmd;
+	unsigned char *cmd;
 	int i;
 	if(err==ERR_OK){
-		buf_receive(p);
+		buf_receive(p);//read data in pcb to buffer
 		tcp_recved(pcb,p->tot_len);
-		//data = p->payload;
-		cmd = &buffer[4];
-		if(strncmp(buffer,REQUEST_HEAD,4)==0){
+		cmd = buffer+REQ_HEAD_LEN;
+		if(strncmp(buffer,REQUEST_HEAD,REQ_HEAD_LEN)==0){
 			UARTprintf("req head detected\n");
-			for(i=4;i<p->len-4;i++){//check if the cmd is complete.
-				if(strncmp(buffer+i,REQUEST_END,4)==0)break;
+			for(i=REQ_HEAD_LEN;i<p->len-REQ_END_LEN;i++){//check if the cmd is complete.
+				if(strncmp(buffer+i,REQUEST_END,REQ_END_LEN)==0)break;
 			}
-			if(i>p->len-4){//not complete
+			if(i>p->len-REQ_END_LEN){//not complete
 				UARTprintf("the command is not complete\n");
 				pbuf_free(p);
 				return ERR_OK;
@@ -75,55 +90,46 @@ err_t my_recv(void *arg, struct tcp_pcb *pcb, struct pbuf *p, err_t err){
 			UARTprintf("in the buffer:%s\n",cmd);
 			parseTCPCmd(pcb,cmd);
 		}
-	}	
+		else if(isFileReceiving==1){
+			//is receiving file
+			writeFile();
+		}
+	}				 
+	pbuf_free(p);
 	return ERR_OK;
 }
 
 err_t my_accept(void *arg,struct tcp_pcb *pcb,err_t err){
 	if(err==ERR_OK){
 		UARTprintf("connect succeed!!\n");
+		//when receive packet, call my_recv
   		tcp_recv(pcb, my_recv);
 	}
 	else
-		UARTprintf("fuck fail.\n");
+		UARTprintf("fail to connect.\n");
 	return ERR_OK;
 }
 
+//build a tcp server, listen to port 80
 void TCPInitial(void){
 	struct tcp_pcb *pcb;
 	pcb = tcp_new();
 	tcp_bind(pcb, IP_ADDR_ANY, 80);
 	pcb = tcp_listen(pcb);
+	//when receive a connect request, call my_accept
 	tcp_accept(pcb, my_accept);
+
+	isFileReceiving = 0;
+	//g_sOutputFile.fs=&g_sFatFs;
 }
 
-
-err_t TcpCli_Connected(void *arg,struct tcp_pcb *pcb,err_t err)
-{
-   tcp_write(pcb,buffer,sizeof(buffer),0);      //发送数据
-   
-   tcp_close(pcb);
-   
-   return ERR_OK;
-}
-
-void send_buf(){
-	struct tcp_pcb *Clipcb;
-	struct ip_addr ipaddr;
-  
-	IP4_ADDR(&ipaddr,192,168,1,105);
-  
-	Clipcb = tcp_new();                       // 建立通信的TCP控制块(Clipcb) 
-  
-	tcp_bind(Clipcb,IP_ADDR_ANY,1000);       // 绑定本地IP地址和端口号 
-  
-	tcp_connect(Clipcb,&ipaddr,8888,TcpCli_Connected);
-}
-
-void parseTCPCmd(struct tcp_pcb *pcb,const char* cmd){
+void parseTCPCmd(struct tcp_pcb *pcb,char* cmd){
 	char* argv[1];
+	char* divider;
 	if(strncmp(cmd,"play",4)==0){
 		UARTprintf("play what? %s\n",cmd+5);
+		if(current_page!=PAGE_DETAIL)
+			switchPage(PAGE_DETAIL);
 		switchMusic(cmd+5);	
 	}
 	else if(strncmp(cmd,"cd",2)==0){
@@ -132,13 +138,79 @@ void parseTCPCmd(struct tcp_pcb *pcb,const char* cmd){
 	else if(strncmp(cmd,"ls",2)==0){
 		argv[0] = buffer;
 		if(Cmd_ls(1,argv)==0){
-			//UARTprintf("%s\n",buffer);
-			//pcb->remote_port = 8888;
-			send_buf();
-			//tcp_write(pcb,buffer,strlen(buffer),0);
+			tcp_write(pcb,buffer,strlen(buffer),0);
 		}
 		else{
 			UARTprintf("ls fail\n");
 		}
+	}
+	else if(strncmp(cmd,"file",4)==0){
+		/*if(*(cmd+5)=='0'){
+			//start receiving file
+			UARTprintf("receiving file: %s\n",cmd+7);
+			if(openFileWrite(cmd+7)==FR_OK){
+				isFileReceiving = 1;
+			}
+		}else{
+			isFileReceiving = 0;
+			f_close(&g_sOutputFile);
+			UARTprintf("finish receiving file\n");
+		}*/
+		divider = splitFileInfo(cmd+5);//the divider of file size and file name
+		received_size = 0;
+		UARTprintf("receiving file: %s\n",divider+1);
+		if(openFileWrite(divider+1)==FR_OK){
+			isFileReceiving = 1;
+		}
 	}	
+}
+
+char* splitFileInfo(char* info){
+	file_size = 0;
+	while(*info!='/'){	   
+		file_size*=10;
+		file_size+=(*info-'0');
+		info++;
+	}							 
+	return info;
+}
+
+FRESULT openFileWrite(const char* filename){	
+	FRESULT result;
+	result = f_open(&g_sOutputFile, filename, FA_CREATE_NEW);
+	result = f_open(&g_sOutputFile, filename, FA_WRITE);
+	UARTprintf("open file:%s\n",filename);
+	if(result!=FR_OK){
+		UARTprintf("fail to open output file:%s\n",(char*)StringFromFresult(result));
+	}
+	return result;
+}				  	 
+
+void writeFile(void){
+	FRESULT result = FR_OK;
+	unsigned short usCount;
+	unsigned long ulCount = 0;
+	UARTprintf("before write file..\n");
+	result = f_write(&g_sOutputFile,buffer,buffer_len,&usCount);
+	usCount = buffer_len;
+	g_sOutputFile.fs = (FATFS*)&g_sFatFs;
+	SysCtlDelay(TheSysClock/10);
+	UARTprintf("after write file..\n");
+	if(result!=FR_OK){
+		finishReceiving();
+		UARTprintf("fail to write file:%s\n",(char*)StringFromFresult(result));
+	}else{
+		*(unsigned short*)(&(ulCount))= usCount;
+		received_size += ulCount;
+		UARTprintf("current %d bytes,reveive %d bytes,full size %d bytes\n",usCount,received_size,file_size);
+	}
+	if(received_size>=file_size){
+		finishReceiving();
+	    UARTprintf("finish receiving\n");
+	}
+}
+
+void finishReceiving(void){
+	isFileReceiving = 0;
+	f_close(&g_sOutputFile);
 }

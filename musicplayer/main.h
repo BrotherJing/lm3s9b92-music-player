@@ -37,7 +37,9 @@ static tFresultString g_sFresultStrings[] =
     FRESULT_ENTRY(FR_MKFS_ABORTED)
 };
 
-void switchMusic(const char* name);
-
+void switchMusic(const char* name);			   
+void switchPage(int page);
+int Cmd_ls(int argc, char *argv[]);		  
+const char *StringFromFresult(FRESULT fresult);
 
 #endif

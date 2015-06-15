@@ -44,13 +44,13 @@ tDMAControlTable sDMAControlTable[64] __attribute__ ((aligned(1024)));
 #endif
 
 //file processing
-static FATFS g_sFatFs;
+FATFS g_sFatFs;
 static DIR g_sDirObject;
 static FILINFO g_sFileInfo;
 FIL g_sFileObject;  
 
 static const char *g_ppcDirListStrings[NUM_LIST_STRINGS];
-static char g_pcFilenames[NUM_LIST_STRINGS][MAX_FILENAME_STRING_LEN];
+static char g_pcFilenames[NUM_LIST_STRINGS][MAX_FILENAME_STRING_LEN];	//a list of file names
 static char g_cCwdBuf[PATH_BUF_SIZE] = "/";
 
 static char music_progress[MUSIC_PROGRESS_TEXT_LEN];
@@ -77,7 +77,7 @@ extern tCanvasWidget g_sListHeading;
 
 void OnListBoxChange(tWidget *pWidget, short usSelected);
 void OnBackBtnPress(tWidget *pWidget);
-static int PopulateFileListBox(tBoolean bRedraw);
+//static int PopulateFileListBox(tBoolean bRedraw);
 
 //file list
 ListBox(g_sDirList, &g_sListBackground, 0, 0,
@@ -128,21 +128,12 @@ OnSliderChange(tWidget *pWidget, long lValue)
     SoundVolumeSet(lValue);
 }
 
-static const char *
+const char *
 StringFromFresult(FRESULT fresult)
 {
     unsigned int uIdx;
-
-    //
-    // Enter a loop to search the error code table for a matching
-    // error code.
-    //
     for(uIdx = 0; uIdx < NUM_FRESULT_CODES; uIdx++)
     {
-        //
-        // If a match is found, then return the string name of the
-        // error code.
-        //
         if(g_sFresultStrings[uIdx].fresult == fresult)
         {
             return(g_sFresultStrings[uIdx].pcResultStr);
@@ -193,7 +184,6 @@ WaveOpen(FIL *pFile, const char *pcFileName, tWaveHeader *pWaveHeader)
 			Result = f_open(pFile, pcFileName, FA_READ);
 			UARTprintf("fail to open file:%s\n",(char*)StringFromFresult(Result));
 		}
-		//return(Result);
     }
     Result = f_read(pFile, g_pucBuffer, 12, &usCount);
     if(Result != FR_OK)
@@ -256,7 +246,7 @@ WaveOpen(FIL *pFile, const char *pcFileName, tWaveHeader *pWaveHeader)
         return(FR_INVALID_NAME);
     }
 	
-    if(ulChunkSize > 16)
+    if(ulChunkSize > 16)// if has fact chunk, read it
     {
 		Result = f_read(pFile,g_pucBuffer,8,&usCount);		//fact chunk
 		Result = f_read(pFile,g_pucBuffer,pulBuffer[1],&usCount);
@@ -407,55 +397,7 @@ void Timer_ISR(void){
 	}		
 }
 
-static int
-PopulateFileListBox(tBoolean bRedraw)
-{
-    unsigned long ulItemCount;
-    FRESULT fresult;
-    ListBoxClear(&g_sDirList);
-    if(bRedraw)
-    {
-        WidgetPaint((tWidget *)&g_sDirList);
-    }
-    fresult = f_opendir(&g_sDirObject, g_cCwdBuf);
-    if(fresult != FR_OK)
-    {
-        return(fresult);
-    }
-
-    ulItemCount = 0;
-    while(1)
-    {
-        fresult = f_readdir(&g_sDirObject, &g_sFileInfo);
-        if(fresult != FR_OK)
-        {
-            return(fresult);
-        }
-        if(!g_sFileInfo.fname[0])
-        {
-            break;
-        }
-        if(ulItemCount < NUM_LIST_STRINGS)
-        {
-            if((g_sFileInfo.fattrib & AM_DIR) == 0)
-            {
-                usprintf(g_pcFilenames[ulItemCount], "[%c] %s",
-                     (g_sFileInfo.fattrib & AM_DIR) ? 'D' : 'F',
-                      g_sFileInfo.fname);
-                ListBoxTextAdd(&g_sDirList, g_pcFilenames[ulItemCount]);
-							  
-            }
-        }
-        if((g_sFileInfo.fattrib & AM_DIR) == 0)
-        {
-            ulItemCount++;
-        }
-    }
-    return(0);
-}
-
-int
-Cmd_ls(int argc, char *argv[])
+int Cmd_ls(int argc, char *argv[])
 {
     unsigned long ulTotalSize, ulItemCount, ulFileCount, ulDirCount;
 	char* output_buffer;
@@ -464,10 +406,19 @@ Cmd_ls(int argc, char *argv[])
     FRESULT fresult;
     fresult = f_opendir(&g_sDirObject, g_cCwdBuf);
 	
-	if(argc==0)useEthernet = 0;
+	if(current_page!=PAGE_LIST)return 0;
+
+	if(argc==0){
+		useEthernet = 0;
+		ListBoxClear(&g_sDirList);
+		WidgetPaint((tWidget *)&g_sDirList);
+	}
 	else{
 		useEthernet = 1;
 		output_buffer = argv[0];
+		//this is a part of our portocol
+		strcpy(output_buffer,"ls ");
+		output_buffer = output_buffer + 3;
 	}
 
     if(fresult != FR_OK)
@@ -487,14 +438,8 @@ Cmd_ls(int argc, char *argv[])
 
     for(;;)
     {
-        //
-        // Read an entry from the directory.
-        //
         fresult = f_readdir(&g_sDirObject, &g_sFileInfo);
 
-        //
-        // Check for error and return if there is a problem.
-        //
         if(fresult != FR_OK)
         {
 			if(useEthernet)
@@ -504,19 +449,11 @@ Cmd_ls(int argc, char *argv[])
             return(fresult);
         }
 
-        //
-        // If the file name is blank, then this is the end of the
-        // listing.
-        //
         if(!g_sFileInfo.fname[0])
         {
             break;
         }
 
-        //
-        // Print the entry information on a single line with formatting
-        // to show the attributes, date, time, size, and name.
-        //
 		if(useEthernet){
 			usprintf(inner_buffer,"[%c] %s\n",
                      (g_sFileInfo.fattrib & AM_DIR) ? 'D' : 'F',
@@ -524,37 +461,23 @@ Cmd_ls(int argc, char *argv[])
 			strcpy(output_buffer,inner_buffer);
 			output_buffer = output_buffer + strlen(inner_buffer);
 		}
-		else
-			UARTprintf("[%c] %s\n",
+		else{
+			usprintf(g_pcFilenames[ulItemCount], "[%c] %s",
                      (g_sFileInfo.fattrib & AM_DIR) ? 'D' : 'F',
                       g_sFileInfo.fname);
+			UARTprintf("%s\n",g_pcFilenames[ulItemCount]);
+			ListBoxTextAdd(&g_sDirList, g_pcFilenames[ulItemCount]);
+		}
 
-        //
-        // If the attribute is directory, then increment the directory count.
-        //
-        if(g_sFileInfo.fattrib & AM_DIR)
-        {
+        if(g_sFileInfo.fattrib & AM_DIR){
             ulDirCount++;
         }
-
-        //
-        // Otherwise, it is a file.  Increment the file count, and
-        // add in the file size to the total.
-        //
-        else
-        {
+        else{
             ulFileCount++;
             ulTotalSize += g_sFileInfo.fsize;
         }
-
-        //
-        // Move to the next entry in the item array we use to populate the
-        // list box.
-        //
         ulItemCount++;
-
-    }   // endfor
-
+    }
     return(0);
 }
 
@@ -580,20 +503,16 @@ main(void)
     TouchScreenInit();
     TouchScreenCallbackSet(WidgetPointerMessage);
 	EthernetInitial();
-
-	WidgetAdd(WIDGET_ROOT,(tWidget*)&g_sListBackground);
-	WidgetAdd((tWidget*)&g_sListBackground,(tWidget*)&g_sDirList);
-    WidgetPaint(WIDGET_ROOT);
-    WidgetMessageQueueProcess();
+	
+	switchPage(PAGE_LIST);
 
     if(f_mount(0, &g_sFatFs) != FR_OK)return(1);
 
-    PopulateFileListBox(true);
-
-	current_page = PAGE_LIST;
     g_ulFlags = 0;
     SoundInit(0);
 	TCPInitial();
+
+	Cmd_ls(0,NULL);
 
     while(1)
     {
@@ -614,12 +533,13 @@ void OnListBoxChange(tWidget *pWidget, short usSelected){
 			//cd to the dir..
 		}	
 		else{
-			current_page = PAGE_DETAIL;
+			/*current_page = PAGE_DETAIL;
 			WidgetRemove((tWidget*)&g_sListBackground);
 			//WidgetRemove((tWidget*)&g_sListHeading);
 			WidgetAdd(WIDGET_ROOT,(tWidget*)&g_sHeading);
 			WidgetAdd(WIDGET_ROOT,(tWidget*)&g_sDetailBackground);
-			WidgetPaint(WIDGET_ROOT);
+			WidgetPaint(WIDGET_ROOT);*/
+			switchPage(PAGE_DETAIL);
 			switchMusic(&g_pcFilenames[selected][4]);
 			UARTprintf("select %s\n",&g_pcFilenames[selected][4]);
 		}
@@ -628,12 +548,13 @@ void OnListBoxChange(tWidget *pWidget, short usSelected){
 
 //go back to list page
 void OnBackBtnPress(tWidget *pWidget){
-	current_page = PAGE_LIST;
+	/*current_page = PAGE_LIST;
 	WidgetRemove((tWidget*)&g_sHeading);
 	WidgetRemove((tWidget*)&g_sDetailBackground);
 	WidgetAdd(WIDGET_ROOT,(tWidget*)&g_sListBackground);
 	//WidgetAdd(WIDGET_ROOT,(tWidget*)&g_sListHeading);
-	WidgetPaint(WIDGET_ROOT);
+	WidgetPaint(WIDGET_ROOT);*/
+	switchPage(PAGE_LIST);
 }
 
 void switchMusic(const char* name){
@@ -642,5 +563,26 @@ void switchMusic(const char* name){
 	g_ulFlags &= ~BUFFER_PLAYING;
 	if(WaveOpen(&g_sFileObject, name, &g_sWaveHeader)== FR_OK){
 		g_ulFlags |= BUFFER_PLAYING;
+	}
+}
+
+void switchPage(int page){
+	switch(page){
+		case PAGE_LIST:	 	 
+			current_page = PAGE_LIST;
+			WidgetRemove((tWidget*)&g_sHeading);
+			WidgetRemove((tWidget*)&g_sDetailBackground);
+			WidgetAdd(WIDGET_ROOT,(tWidget*)&g_sListBackground);  
+			WidgetPaint(WIDGET_ROOT);
+			break;
+		case PAGE_DETAIL:
+			current_page = PAGE_DETAIL;
+			WidgetRemove((tWidget*)&g_sListBackground);
+			WidgetAdd(WIDGET_ROOT,(tWidget*)&g_sHeading);
+			WidgetAdd(WIDGET_ROOT,(tWidget*)&g_sDetailBackground);
+			WidgetPaint(WIDGET_ROOT);
+			break;
+		default:
+			break;
 	}
 }

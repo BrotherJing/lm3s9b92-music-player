@@ -33,6 +33,8 @@
 #include "FileHelper.h"
 #include "main.h" 
 
+#include "images/p2.h"
+
 #ifdef ewarm
 #pragma data_alignment=1024
 tDMAControlTable sDMAControlTable[64];
@@ -63,6 +65,7 @@ static unsigned short g_usMinutes;
 static unsigned short g_usSeconds;
 static unsigned short g_usMinutesPlayed;
 static unsigned short g_usSecondsPlayed;
+static char music_name[MAX_FILENAME_STRING_LEN];
 
 tWaveHeader g_sWaveHeader;
 unsigned int current_page;		//current page on screen
@@ -76,6 +79,9 @@ extern tCanvasWidget g_sTextFrame;
 extern tCanvasWidget g_sListHeading;
 extern tPushButtonWidget g_sPause;		
 extern tPushButtonWidget g_sResume;
+extern tSliderWidget g_sProgressBar;
+extern tCanvasWidget g_sMusicName;
+extern tCanvasWidget g_sMusicPic;
 
 void OnListBoxChange(tWidget *pWidget, short usSelected);
 void OnBackBtnPress(tWidget *pWidget);
@@ -83,7 +89,7 @@ void OnBackBtnPress(tWidget *pWidget);
 //file list
 ListBox(g_sDirList, &g_sListBackground, 0, 0,
         &g_sKitronix320x240x16_SSD2119,
-        5, 35, 310, 205, 0, ClrWhite, 0x00bdbdbd,
+        5, 35, 310, 205, 0, ClrWhite, LIGHT_GREY,
         ClrBlack, ClrBlack, ClrSilver, &g_sFontCmss14, g_ppcDirListStrings,
         NUM_LIST_STRINGS, 0, OnListBoxChange);
 
@@ -91,47 +97,56 @@ Canvas(g_sListBackground, WIDGET_ROOT, 0, &g_sListHeading,
       &g_sKitronix320x240x16_SSD2119, 0, 0, 320, 240,
       CANVAS_STYLE_FILL, ClrWhite, 0, 0, 0, 0, 0, 0);
 
-Canvas(g_sDetailBackground,WIDGET_ROOT,0,&g_sTextFrame,
+Canvas(g_sDetailBackground,WIDGET_ROOT,0,&g_sProgressText,
 	&g_sKitronix320x240x16_SSD2119,0,30,320,210,
 	CANVAS_STYLE_FILL,ClrWhite,0,0,0,0,0,0);
 
 Canvas(g_sListHeading, &g_sListBackground, &g_sDirList, 0,
        &g_sKitronix320x240x16_SSD2119, 0, 0, 320, 30,
-       (CANVAS_STYLE_FILL | CANVAS_STYLE_TEXT),
-       0x0058A7F8, 0, ClrWhite, &g_sFontCmss20, "", 0, 0);
+       (CANVAS_STYLE_FILL | CANVAS_STYLE_TEXT | CANVAS_STYLE_TEXT_OPAQUE),
+       MAIN_COLOR, 0, ClrWhite, &g_sFontCmss20, "Getting IP..", 0, 0);
 
 Canvas(g_sHeading, WIDGET_ROOT, &g_sDetailBackground, &g_sBackBtn,
        &g_sKitronix320x240x16_SSD2119, 0, 0, 320, 30,
        (CANVAS_STYLE_FILL | CANVAS_STYLE_TEXT),
-       0x0058A7F8, 0, ClrWhite, &g_sFontCmss20, "Music", 0, 0);
+       MAIN_COLOR, 0, ClrWhite, &g_sFontCmss20, "Music", 0, 0);
 
 RectangularButton(g_sBackBtn,&g_sHeading,0,0,
 	&g_sKitronix320x240x16_SSD2119,0,0,30,30,
 	(PB_STYLE_TEXT|PB_STYLE_FILL),
-	0x0058A7F8,0x0058A7F8,0,ClrWhite,
+	MAIN_COLOR,MAIN_COLOR,0,ClrWhite,
 	&g_sFontCmss22b,"..",0,0,0,0,OnBackBtnPress);
 
-Canvas(g_sTextFrame,&g_sDetailBackground,&g_sPause,&g_sProgressText,
-	&g_sKitronix320x240x16_SSD2119,0,80,320,40,
-	CANVAS_STYLE_FILL,
-	ClrWhite,0,0,0,"",0,0);
-
-Canvas(g_sProgressText,&g_sTextFrame,0,0,
-	&g_sKitronix320x240x16_SSD2119,0,80,320,40,
-	CANVAS_STYLE_TEXT_HCENTER | CANVAS_STYLE_TEXT,
-	ClrWhite,0,ClrBlack,&g_sFontCmss20,"",0,0);
+Canvas(g_sProgressText,&g_sDetailBackground,&g_sPause,0,
+	&g_sKitronix320x240x16_SSD2119,0,180,320,40,
+	CANVAS_STYLE_TEXT_RIGHT | CANVAS_STYLE_TEXT | CANVAS_STYLE_TEXT_OPAQUE,
+	ClrWhite,0,GREY,&g_sFontCmss20,"",0,0);
 
 RectangularButton(g_sPause,&g_sDetailBackground,&g_sResume,0,
-	&g_sKitronix320x240x16_SSD2119,90,150,60,40,
+	&g_sKitronix320x240x16_SSD2119,5,185,60,30,
 	(PB_STYLE_TEXT|PB_STYLE_FILL),
-	0x0058A7F8,0x0058A7F8,0,ClrWhite,
-	&g_sFontCmss14b,"PAUSE",0,0,0,0,pauseMusic);
+	MAIN_COLOR,MAIN_COLOR,0,ClrWhite,
+	&g_sFontCmss12b,"PAUSE",0,0,0,0,pauseMusic);
 
-RectangularButton(g_sResume,&g_sDetailBackground,0,0,
-	&g_sKitronix320x240x16_SSD2119,170,150,60,40,
+RectangularButton(g_sResume,&g_sDetailBackground,&g_sProgressBar,0,
+	&g_sKitronix320x240x16_SSD2119,70,185,60,30,
 	(PB_STYLE_TEXT|PB_STYLE_FILL),
-	0x0058A7F8,0x0058A7F8,0,ClrWhite,
-	&g_sFontCmss14b,"RESUME",0,0,0,0,resumeMusic);
+	MAIN_COLOR,MAIN_COLOR,0,ClrWhite,
+	&g_sFontCmss12b,"RESUME",0,0,0,0,resumeMusic);
+
+Slider(g_sProgressBar,&g_sDetailBackground,&g_sMusicName,0,
+	&g_sKitronix320x240x16_SSD2119,0,220,320,20,
+	0,100,0,SL_STYLE_FILL|SL_STYLE_BACKG_FILL|SL_STYLE_LOCKED,
+	PB_COLOR,ClrSilver,0,0,0,0,0,0,0,0);
+
+Canvas(g_sMusicName,&g_sDetailBackground,&g_sMusicPic,0,
+	&g_sKitronix320x240x16_SSD2119,0,30,320,30,
+	CANVAS_STYLE_TEXT_HCENTER | CANVAS_STYLE_TEXT | CANVAS_STYLE_TEXT_OPAQUE,
+	ClrWhite,0,GREY,&g_sFontCmss20,"",0,0);	
+
+Canvas(g_sMusicPic,&g_sDetailBackground,0,0,
+	&g_sKitronix320x240x16_SSD2119,110,60,100,100,
+	CANVAS_STYLE_IMG,0,0,0,0,0,g_pucImageP2,0);
 
 const char *
 StringFromFresult(FRESULT fresult)
@@ -179,6 +194,7 @@ WaveOpen(FIL *pFile, const char *pcFileName, tWaveHeader *pWaveHeader)
     pulBuffer = (unsigned long *)g_pucBuffer;
     pusBuffer = (unsigned short *)g_pucBuffer;
 
+	strcpy(music_name,pcFileName);
     Result = f_open(pFile, pcFileName, FA_READ);
     if(Result != FR_OK)
     {
@@ -353,7 +369,7 @@ WavePlay(FIL *pFile, tWaveHeader *pWaveHeader)
 			SysCtlDelay(TheSysClock/100);	
         	WidgetMessageQueueProcess();
 			continue;
-		}
+		}  
         IntDisable(INT_I2S0);
         if(g_ulFlags & BUFFER_BOTTOM_EMPTY)
         {
@@ -403,7 +419,9 @@ void Timer_ISR(void){
 		g_usSecondsPlayed,
 		g_usMinutes,g_usSeconds);
 		CanvasTextSet(&g_sProgressText,music_progress);
-		WidgetPaint((tWidget*)&g_sTextFrame);
+		WidgetPaint((tWidget*)&g_sProgressText);
+		SliderValueSet(&g_sProgressBar,g_ulBytesPlayed*100/g_sWaveHeader.ulDataSize);
+		WidgetPaint((tWidget*)&g_sProgressBar);
 	}		
 }
 
@@ -507,14 +525,14 @@ main(void)
     TouchScreenInit();
     TouchScreenCallbackSet(WidgetPointerMessage);
 	EthernetInitial();
-	
-	switchPage(PAGE_LIST);
 
     if(f_mount(0, &g_sFatFs) != FR_OK)return(1);
 
     g_ulFlags = 0;
     SoundInit(0);
-	TCPInitial();
+	TCPInitial();//initial tcp server
+	
+	switchPage(PAGE_LIST);//switch to list page
 
 	Cmd_ls(0,NULL);
 
@@ -555,6 +573,12 @@ void switchMusic(const char* name){
 	g_ulFlags &= ~BUFFER_PLAYING;
 	if(WaveOpen(&g_sFileObject, name, &g_sWaveHeader)== FR_OK){
 		g_ulFlags |= BUFFER_PLAYING;
+	}
+	if(current_page==PAGE_DETAIL){
+		CanvasTextSet(&g_sMusicName,music_name);
+		WidgetPaint((tWidget*)&g_sMusicName);
+		SliderValueSet(&g_sProgressBar,0);
+		WidgetPaint((tWidget*)&g_sProgressBar);
 	}
 }
 

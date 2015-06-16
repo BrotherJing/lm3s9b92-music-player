@@ -160,10 +160,10 @@
       <FileType>2</FileType>
       <tvExp>0</tvExp>
       <Focus>0</Focus>
-      <ColumnNumber>25</ColumnNumber>
+      <ColumnNumber>24</ColumnNumber>
       <tvExpOptDlg>0</tvExpOptDlg>
-      <TopLine>0</TopLine>
-      <CurrentLine>0</CurrentLine>
+      <TopLine>1</TopLine>
+      <CurrentLine>1</CurrentLine>
       <bDave2>0</bDave2>
       <PathWithFileName>.\startup_rvmdk.S</PathWithFileName>
       <FilenameWithoutPath>startup_rvmdk.S</FilenameWithoutPath>
@@ -244,10 +244,10 @@
       <FileType>1</FileType>
       <tvExp>0</tvExp>
       <Focus>0</Focus>
-      <ColumnNumber>20</ColumnNumber>
+      <ColumnNumber>102</ColumnNumber>
       <tvExpOptDlg>0</tvExpOptDlg>
-      <TopLine>1007</TopLine>
-      <CurrentLine>1007</CurrentLine>
+      <TopLine>0</TopLine>
+      <CurrentLine>0</CurrentLine>
       <bDave2>0</bDave2>
       <PathWithFileName>H:\tempInstall\StellarisWare\third_party\fatfs\src\ff.c</PathWithFileName>
       <FilenameWithoutPath>ff.c</FilenameWithoutPath>
@@ -286,10 +286,10 @@
       <FileType>1</FileType>
       <tvExp>0</tvExp>
       <Focus>0</Focus>
-      <ColumnNumber>0</ColumnNumber>
+      <ColumnNumber>16</ColumnNumber>
       <tvExpOptDlg>0</tvExpOptDlg>
-      <TopLine>1</TopLine>
-      <CurrentLine>9</CurrentLine>
+      <TopLine>133</TopLine>
+      <CurrentLine>145</CurrentLine>
       <bDave2>0</bDave2>
       <PathWithFileName>.\main.c</PathWithFileName>
       <FilenameWithoutPath>main.c</FilenameWithoutPath>
@@ -302,8 +302,8 @@
       <Focus>0</Focus>
       <ColumnNumber>10</ColumnNumber>
       <tvExpOptDlg>0</tvExpOptDlg>
-      <TopLine>1</TopLine>
-      <CurrentLine>1</CurrentLine>
+      <TopLine>0</TopLine>
+      <CurrentLine>0</CurrentLine>
       <bDave2>0</bDave2>
       <PathWithFileName>H:\tempInstall\StellarisWare\utils\uartstdio.c</PathWithFileName>
       <FilenameWithoutPath>uartstdio.c</FilenameWithoutPath>
@@ -384,10 +384,10 @@
       <FileType>1</FileType>
       <tvExp>0</tvExp>
       <Focus>0</Focus>
-      <ColumnNumber>0</ColumnNumber>
+      <ColumnNumber>51</ColumnNumber>
       <tvExpOptDlg>0</tvExpOptDlg>
-      <TopLine>1</TopLine>
-      <CurrentLine>1</CurrentLine>
+      <TopLine>11</TopLine>
+      <CurrentLine>20</CurrentLine>
       <bDave2>0</bDave2>
       <PathWithFileName>.\UARTISR.c</PathWithFileName>
       <FilenameWithoutPath>UARTISR.c</FilenameWithoutPath>
@@ -398,10 +398,10 @@
       <FileType>1</FileType>
       <tvExp>0</tvExp>
       <Focus>0</Focus>
-      <ColumnNumber>44</ColumnNumber>
+      <ColumnNumber>3</ColumnNumber>
       <tvExpOptDlg>0</tvExpOptDlg>
-      <TopLine>181</TopLine>
-      <CurrentLine>181</CurrentLine>
+      <TopLine>1</TopLine>
+      <CurrentLine>1</CurrentLine>
       <bDave2>0</bDave2>
       <PathWithFileName>.\TCPhandler.c</PathWithFileName>
       <FilenameWithoutPath>TCPhandler.c</FilenameWithoutPath>
@@ -435,8 +435,8 @@
       <Focus>0</Focus>
       <ColumnNumber>65</ColumnNumber>
       <tvExpOptDlg>0</tvExpOptDlg>
-      <TopLine>1</TopLine>
-      <CurrentLine>21</CurrentLine>
+      <TopLine>0</TopLine>
+      <CurrentLine>0</CurrentLine>
       <bDave2>0</bDave2>
       <PathWithFileName>.\UARTConfigure.c</PathWithFileName>
       <FilenameWithoutPath>UARTConfigure.c</FilenameWithoutPath>
@@ -475,10 +475,10 @@
       <FileType>1</FileType>
       <tvExp>0</tvExp>
       <Focus>0</Focus>
-      <ColumnNumber>45</ColumnNumber>
+      <ColumnNumber>2</ColumnNumber>
       <tvExpOptDlg>0</tvExpOptDlg>
-      <TopLine>1</TopLine>
-      <CurrentLine>1</CurrentLine>
+      <TopLine>98</TopLine>
+      <CurrentLine>107</CurrentLine>
       <bDave2>0</bDave2>
       <PathWithFileName>.\EthernetConfigure.c</PathWithFileName>
       <FilenameWithoutPath>EthernetConfigure.c</FilenameWithoutPath>
@@ -486,9 +486,9 @@
   </Group>
 
   <AlienFiles>
-    <PathWithFilename>C:\Users\Administrator\Documents\lm3s9b92-music-player\musicplayer\WaveFileHelper.h</PathWithFilename>
-    <TopLine>1</TopLine>
-    <CurrentLine>1</CurrentLine>
+    <PathWithFilename>C:\Users\Administrator\Documents\lm3s9b92-music-player\musicplayer\main.h</PathWithFilename>
+    <TopLine>7</TopLine>
+    <CurrentLine>18</CurrentLine>
     <Constant>0</Constant>
     <WindowPosition>
       <length>0</length>
@@ -512,61 +512,9 @@
   </AlienFiles>
 
   <AlienFiles>
-    <PathWithFilename>H:\tempInstall\StellarisWare\third_party\fatfs\src\diskio.h</PathWithFilename>
-    <TopLine>19</TopLine>
-    <CurrentLine>19</CurrentLine>
-    <Constant>0</Constant>
-    <WindowPosition>
-      <length>0</length>
-      <flags>0</flags>
-      <showCmd>0</showCmd>
-      <MinPosition>
-        <xPos>0</xPos>
-        <yPos>0</yPos>
-      </MinPosition>
-      <MaxPosition>
-        <xPos>0</xPos>
-        <yPos>0</yPos>
-      </MaxPosition>
-      <NormalPosition>
-        <Top>0</Top>
-        <Left>0</Left>
-        <Right>0</Right>
-        <Bottom>0</Bottom>
-      </NormalPosition>
-    </WindowPosition>
-  </AlienFiles>
-
-  <AlienFiles>
-    <PathWithFilename>H:\tempInstall\StellarisWare\third_party\fatfs\src\ff.h</PathWithFilename>
-    <TopLine>112</TopLine>
-    <CurrentLine>124</CurrentLine>
-    <Constant>0</Constant>
-    <WindowPosition>
-      <length>0</length>
-      <flags>0</flags>
-      <showCmd>0</showCmd>
-      <MinPosition>
-        <xPos>0</xPos>
-        <yPos>0</yPos>
-      </MinPosition>
-      <MaxPosition>
-        <xPos>0</xPos>
-        <yPos>0</yPos>
-      </MaxPosition>
-      <NormalPosition>
-        <Top>0</Top>
-        <Left>0</Left>
-        <Right>0</Right>
-        <Bottom>0</Bottom>
-      </NormalPosition>
-    </WindowPosition>
-  </AlienFiles>
-
-  <AlienFiles>
-    <PathWithFilename>H:\tempInstall\StellarisWare\third_party\fatfs\src\integer.h</PathWithFilename>
-    <TopLine>1</TopLine>
-    <CurrentLine>1</CurrentLine>
+    <PathWithFilename>C:\StellarisWare\grlib\canvas.h</PathWithFilename>
+    <TopLine>96</TopLine>
+    <CurrentLine>105</CurrentLine>
     <Constant>0</Constant>
     <WindowPosition>
       <length>0</length>
@@ -615,60 +563,68 @@
     </WindowPosition>
   </AlienFiles>
 
+  <AlienFiles>
+    <PathWithFilename>C:\Users\Administrator\Documents\lm3s9b92-music-player\musicplayer\images\p2.h</PathWithFilename>
+    <TopLine>1</TopLine>
+    <CurrentLine>1</CurrentLine>
+    <Constant>0</Constant>
+    <WindowPosition>
+      <length>0</length>
+      <flags>0</flags>
+      <showCmd>0</showCmd>
+      <MinPosition>
+        <xPos>0</xPos>
+        <yPos>0</yPos>
+      </MinPosition>
+      <MaxPosition>
+        <xPos>0</xPos>
+        <yPos>0</yPos>
+      </MaxPosition>
+      <NormalPosition>
+        <Top>0</Top>
+        <Left>0</Left>
+        <Right>0</Right>
+        <Bottom>0</Bottom>
+      </NormalPosition>
+    </WindowPosition>
+  </AlienFiles>
+
   <MDIGroups>
     <Orientation>1</Orientation>
     <ActiveMDIGroup>0</ActiveMDIGroup>
     <MDIGroup>
       <Size>100</Size>
-      <ActiveTab>1</ActiveTab>
+      <ActiveTab>2</ActiveTab>
       <Documents>
         <Doc>
-          <Name>.\main.c</Name>
-          <ColumnNumber>0</ColumnNumber>
+          <Name>.\UARTISR.c</Name>
+          <ColumnNumber>51</ColumnNumber>
+          <TopLine>11</TopLine>
+          <CurrentLine>20</CurrentLine>
+        </Doc>
+        <Doc>
+          <Name>.\startup_rvmdk.S</Name>
+          <ColumnNumber>24</ColumnNumber>
           <TopLine>1</TopLine>
-          <CurrentLine>9</CurrentLine>
+          <CurrentLine>1</CurrentLine>
+        </Doc>
+        <Doc>
+          <Name>.\main.c</Name>
+          <ColumnNumber>16</ColumnNumber>
+          <TopLine>133</TopLine>
+          <CurrentLine>145</CurrentLine>
         </Doc>
         <Doc>
           <Name>.\TCPhandler.c</Name>
-          <ColumnNumber>44</ColumnNumber>
-          <TopLine>181</TopLine>
-          <CurrentLine>181</CurrentLine>
-        </Doc>
-        <Doc>
-          <Name>H:\tempInstall\StellarisWare\third_party\fatfs\src\ff.c</Name>
-          <ColumnNumber>20</ColumnNumber>
-          <TopLine>1007</TopLine>
-          <CurrentLine>1007</CurrentLine>
-        </Doc>
-        <Doc>
-          <Name>H:\tempInstall\StellarisWare\third_party\fatfs\src\ff.h</Name>
-          <ColumnNumber>17</ColumnNumber>
-          <TopLine>112</TopLine>
-          <CurrentLine>124</CurrentLine>
+          <ColumnNumber>3</ColumnNumber>
+          <TopLine>1</TopLine>
+          <CurrentLine>1</CurrentLine>
         </Doc>
         <Doc>
           <Name>.\EthernetConfigure.c</Name>
-          <ColumnNumber>45</ColumnNumber>
-          <TopLine>1</TopLine>
-          <CurrentLine>1</CurrentLine>
-        </Doc>
-        <Doc>
-          <Name>H:\tempInstall\StellarisWare\third_party\fatfs\src\diskio.h</Name>
-          <ColumnNumber>24</ColumnNumber>
-          <TopLine>19</TopLine>
-          <CurrentLine>19</CurrentLine>
-        </Doc>
-        <Doc>
-          <Name>WaveFileHelper.h</Name>
-          <ColumnNumber>0</ColumnNumber>
-          <TopLine>1</TopLine>
-          <CurrentLine>1</CurrentLine>
-        </Doc>
-        <Doc>
-          <Name>H:\tempInstall\StellarisWare\third_party\fatfs\src\integer.h</Name>
-          <ColumnNumber>0</ColumnNumber>
-          <TopLine>1</TopLine>
-          <CurrentLine>1</CurrentLine>
+          <ColumnNumber>2</ColumnNumber>
+          <TopLine>98</TopLine>
+          <CurrentLine>107</CurrentLine>
         </Doc>
         <Doc>
           <Name>TCPhandler.h</Name>
@@ -677,8 +633,20 @@
           <CurrentLine>12</CurrentLine>
         </Doc>
         <Doc>
-          <Name>H:\tempInstall\StellarisWare\utils\uartstdio.c</Name>
-          <ColumnNumber>10</ColumnNumber>
+          <Name>C:\StellarisWare\grlib/canvas.h</Name>
+          <ColumnNumber>11</ColumnNumber>
+          <TopLine>96</TopLine>
+          <CurrentLine>105</CurrentLine>
+        </Doc>
+        <Doc>
+          <Name>main.h</Name>
+          <ColumnNumber>24</ColumnNumber>
+          <TopLine>7</TopLine>
+          <CurrentLine>18</CurrentLine>
+        </Doc>
+        <Doc>
+          <Name>images/p2.h</Name>
+          <ColumnNumber>32</ColumnNumber>
           <TopLine>1</TopLine>
           <CurrentLine>1</CurrentLine>
         </Doc>

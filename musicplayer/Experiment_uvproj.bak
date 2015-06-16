@@ -442,39 +442,14 @@
               <FilePath>H:\tempInstall\StellarisWare\utils\uartstdio.c</FilePath>
             </File>
             <File>
-              <FileName>UARTConfigure.c</FileName>
+              <FileName>locator.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\UARTConfigure.c</FilePath>
+              <FilePath>H:\tempInstall\StellarisWare\utils\locator.c</FilePath>
             </File>
             <File>
-              <FileName>UARTISR.c</FileName>
+              <FileName>lwiplib.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\UARTISR.c</FilePath>
-            </File>
-            <File>
-              <FileName>GPIODriverConfigure.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\GPIODriverConfigure.c</FilePath>
-            </File>
-            <File>
-              <FileName>SysCtlConfigure.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\SysCtlConfigure.c</FilePath>
-            </File>
-            <File>
-              <FileName>TimerConfigure.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\TimerConfigure.c</FilePath>
-            </File>
-            <File>
-              <FileName>TCPhandler.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\TCPhandler.c</FilePath>
-            </File>
-            <File>
-              <FileName>EthernetConfigure.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\EthernetConfigure.c</FilePath>
+              <FilePath>H:\tempInstall\StellarisWare\utils\lwiplib.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -495,6 +470,48 @@
         </Group>
         <Group>
           <GroupName>ISR</GroupName>
+          <Files>
+            <File>
+              <FileName>UARTISR.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\UARTISR.c</FilePath>
+            </File>
+            <File>
+              <FileName>TCPhandler.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\TCPhandler.c</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>Configure</GroupName>
+          <Files>
+            <File>
+              <FileName>SysCtlConfigure.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\SysCtlConfigure.c</FilePath>
+            </File>
+            <File>
+              <FileName>UARTConfigure.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\UARTConfigure.c</FilePath>
+            </File>
+            <File>
+              <FileName>GPIODriverConfigure.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\GPIODriverConfigure.c</FilePath>
+            </File>
+            <File>
+              <FileName>TimerConfigure.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\TimerConfigure.c</FilePath>
+            </File>
+            <File>
+              <FileName>EthernetConfigure.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\EthernetConfigure.c</FilePath>
+            </File>
+          </Files>
         </Group>
       </Groups>
     </Target>

@@ -12,6 +12,11 @@
 #define TICKS_PER_SECOND 100
 #define SYSTICKMS 10
 
+#define MAIN_COLOR	0x0058A7F8
+#define LIGHT_GREY	0x00bdbdbd
+#define PB_COLOR	0x0057C43C
+#define GREY		0x004a4a4a
+
 typedef struct
 {
     FRESULT fresult;

@@ -30,7 +30,7 @@
 #include "main.h"
 
 extern tCanvasWidget g_sRecFileInfo;
-//extern tSliderWidget g_sDldProgressBar;
+extern tSliderWidget g_sDldProgressBar;
 								
 extern unsigned long TheSysClock;
 extern int current_page;
@@ -169,6 +169,19 @@ void parseTCPCmd(struct tcp_pcb *pcb,char* cmd){
 			ptFile = tempFile;
 			isFileReceiving = 1;				   
 		}
+	}
+	else if(strncmp(cmd,"rm",2)==0){
+		if(f_unlink(cmd+3)!=FR_OK){
+			UARTprintf("fail to remove file\n");	
+		}else{
+			argv[0] = buffer;
+			if(Cmd_ls(1,argv)==0){
+				tcp_write(pcb,buffer,strlen(buffer),0);
+			}
+			else{
+				UARTprintf("ls fail\n");
+			}
+		}
 	}	
 }
 
@@ -182,7 +195,7 @@ char* splitFileInfo(char* info){
 	return info;
 }
 
-FRESULT openFileWrite(const char* filename){	
+FRESULT openFileWrite(char* filename){	
 	FRESULT result;
 	result = f_open(&g_sOutputFile, filename, FA_CREATE_NEW);
 	result = f_open(&g_sOutputFile, filename, FA_WRITE);
@@ -206,21 +219,23 @@ void writeFile(void){
 	received_size += ulCount;
 	UARTprintf("%d/%d\n",received_size,file_size);
 	if(current_page == PAGE_DOWNLOAD){
-		//SliderValueSet(&g_sDldProgressBar,received_size*100/file_size);
-		//WidgetPaint((tWidget*)&g_sDldProgressBar);
+		SliderValueSet(&g_sDldProgressBar,received_size*100/file_size);
+		WidgetPaint((tWidget*)&g_sDldProgressBar);
 	}
 
 	if(received_size>=file_size){
 		UARTprintf("start writing file\n");
 
-		SysCtlDelay(TheSysClock);
 		finishReceiving();
 
-	    UARTprintf("finish receiving\n"); 
-		//CanvasTextSet(&g_sRecFileInfo,"Finish!!"); 
-		//WidgetPaint((tWidget*)&g_sRecFileInfo);
-		//SliderValueSet(&g_sDldProgressBar,0);
-		//WidgetPaint((tWidget*)&g_sDldProgressBar);	
+	    UARTprintf("finish receiving\n");
+		
+		if(current_page == PAGE_DOWNLOAD){ 
+			CanvasTextSet(&g_sRecFileInfo,"Finish!!"); 
+			WidgetPaint((tWidget*)&g_sRecFileInfo);
+			SliderValueSet(&g_sDldProgressBar,0);
+			WidgetPaint((tWidget*)&g_sDldProgressBar);	
+		}
 	}
 }
 
@@ -229,9 +244,14 @@ void finishReceiving(void){
 	unsigned long ulCount=0,write_size;
 	unsigned short usCount;
 	ptFile = tempFile;
-	//SliderValueSet(&g_sDldProgressBar,0);	 
-	//WidgetPaint((tWidget*)&g_sDldProgressBar);
+
+	if(current_page == PAGE_DOWNLOAD){
+		SliderValueSet(&g_sDldProgressBar,0);	 
+		WidgetPaint((tWidget*)&g_sDldProgressBar);
+	}
+
 	if(openFileWrite(recFileName)!=FR_OK){
+		UARTprintf("fail to open file");
 		return;	
 	}
 	if(file_size>2048)
@@ -240,13 +260,15 @@ void finishReceiving(void){
 		if(result!=FR_OK){
 			UARTprintf("write fail\n");
 			break;
-		}		  		 
-		//SliderValueSet(&g_sDldProgressBar,write_size*100/file_size);
-		//WidgetPaint((tWidget*)&g_sDldProgressBar);
+		}
 		ptFile+=usCount;
 		*(unsigned short*)(&(ulCount))= usCount;
 		write_size+=ulCount;	   
 		UARTprintf("%d/%d\n",write_size,file_size);
+		if(current_page == PAGE_DOWNLOAD){		  		 
+			SliderValueSet(&g_sDldProgressBar,write_size*100/file_size);
+			WidgetPaint((tWidget*)&g_sDldProgressBar);
+		}
 	}
 	result = f_write(&g_sOutputFile,ptFile,file_size-write_size,&usCount);
 	if(result!=FR_OK){

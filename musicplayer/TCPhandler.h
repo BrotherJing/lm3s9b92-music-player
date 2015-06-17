@@ -6,7 +6,7 @@
 
 extern void TCPInitial(void);
 extern void parseTCPCmd(struct tcp_pcb *pcb,char* cmd);
-extern FRESULT openFileWrite(const char* filename);
+extern FRESULT openFileWrite(char* filename);
 extern void writeFile(void);	
 extern void finishReceiving(void);					
 extern char* splitFileInfo(char* info);

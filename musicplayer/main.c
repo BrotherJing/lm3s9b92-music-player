@@ -90,7 +90,7 @@ extern tSliderWidget g_sProgressBar;
 extern tCanvasWidget g_sMusicPic;
 
 extern tCanvasWidget g_sRecFileInfo;
-//extern tSliderWidget g_sDldProgressBar;
+extern tSliderWidget g_sDldProgressBar;
 
 void OnListBoxChange(tWidget *pWidget, short usSelected);
 void OnBackBtnPress(tWidget *pWidget);
@@ -174,15 +174,15 @@ Canvas(g_sMusicPic,&g_sDetailBackground,0,0,
 	&g_sKitronix320x240x16_SSD2119,110,60,100,100,
 	CANVAS_STYLE_IMG,0,0,0,0,0,g_pucImageP2,0);
 
-Canvas(g_sRecFileInfo,&g_sDownloadBackground,0,0,
+Canvas(g_sRecFileInfo,&g_sDownloadBackground,&g_sDldProgressBar,0,
 	&g_sKitronix320x240x16_SSD2119,0,40,320,40,
 	CANVAS_STYLE_TEXT_HCENTER | CANVAS_STYLE_TEXT | CANVAS_STYLE_TEXT_OPAQUE,
 	ClrWhite,0,GREY,&g_sFontCmss20,"Waiting..",0,0);
 
-/*Slider(g_sDldProgressBar,&g_sDownloadBackground,0,0,
+Slider(g_sDldProgressBar,&g_sDownloadBackground,0,0,
 	&g_sKitronix320x240x16_SSD2119,20,100,280,20,
 	0,100,0,SL_STYLE_FILL|SL_STYLE_BACKG_FILL|SL_STYLE_LOCKED,
-	PB_COLOR,ClrSilver,0,0,0,0,0,0,0,0); */
+	PB_COLOR,ClrSilver,0,0,0,0,0,0,0,0); 
 
 /*Slider(g_sWriteProgressBar,&g_sDownloadBackground,0,0,
 	&g_sKitronix320x240x16_SSD2119,20,140,280,20,
@@ -662,6 +662,7 @@ void switchPage(int page){
 			WidgetAdd(WIDGET_ROOT,(tWidget*)&g_sDownloadBackground);
 			WidgetPaint(WIDGET_ROOT);
 			//WidgetPaint((tWidget*)&g_sDldProgressBar);
+			break;
 		default:
 			break;
 	}

@@ -49,4 +49,6 @@ void switchPage(int page);
 int Cmd_ls(int argc, char *argv[]);		  
 const char *StringFromFresult(FRESULT fresult);
 
+void allocMem(void);
+
 #endif

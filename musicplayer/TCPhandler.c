@@ -12,7 +12,14 @@
 #include "netif/etharp.h"
 #include "netif/ppp_oe.h"
 #include "netif/stellarisif.h"
-										
+							  
+#include "drivers/extram.h"
+#include "drivers/bget.h"
+
+#include "grlib/grlib.h"
+#include "grlib/widget.h"
+#include "grlib/canvas.h"
+#include "grlib/slider.h"										
 #include "utils/locator.h"
 #include "utils/lwiplib.h"			   
 #include "utils/uartstdio.h"   
@@ -21,6 +28,9 @@
 
 #include "TCPhandler.h"
 #include "main.h"
+
+extern tCanvasWidget g_sRecFileInfo;
+//extern tSliderWidget g_sDldProgressBar;
 								
 extern unsigned long TheSysClock;
 extern int current_page;
@@ -29,6 +39,10 @@ unsigned char buffer[1536];
 unsigned long buffer_len;
 unsigned long file_size,received_size;
 unsigned char isFileReceiving;
+char recFileInfo[64];
+char recFileName[16];
+unsigned char *tempFile, *ptFile;
+
 FIL g_sOutputFile;
 
 const static char REQUEST_HEAD[] = {"CMD "};
@@ -145,8 +159,15 @@ void parseTCPCmd(struct tcp_pcb *pcb,char* cmd){
 		divider = splitFileInfo(cmd+5);//the divider of file size and file name
 		received_size = 0;
 		UARTprintf("receiving file: %s\n",divider+1);
-		if(openFileWrite(divider+1)==FR_OK){
-			isFileReceiving = 1;
+		if(current_page == PAGE_DOWNLOAD){
+			usprintf(recFileInfo,"%s %d Bytes",divider+1,file_size);
+			CanvasTextSet(&g_sRecFileInfo,recFileInfo); 
+			WidgetPaint((tWidget*)&g_sRecFileInfo);	
+		}
+		if((tempFile=ExtRAMAlloc(file_size))!=0){
+			strcpy(recFileName,divider+1);
+			ptFile = tempFile;
+			isFileReceiving = 1;				   
 		}
 	}	
 }
@@ -165,7 +186,7 @@ FRESULT openFileWrite(const char* filename){
 	FRESULT result;
 	result = f_open(&g_sOutputFile, filename, FA_CREATE_NEW);
 	result = f_open(&g_sOutputFile, filename, FA_WRITE);
-	//UARTprintf("open file:%s\n",filename);
+	UARTprintf("open file:%s\n",filename);
 	if(result!=FR_OK){
 		UARTprintf("fail to open output file:%s\n",(char*)StringFromFresult(result));
 	}
@@ -173,30 +194,66 @@ FRESULT openFileWrite(const char* filename){
 }				  	 
 
 void writeFile(void){
-	FRESULT result = FR_OK;
+	//FRESULT result = FR_OK;
 	unsigned short usCount;
 	unsigned long ulCount = 0;
-	//UARTprintf("before write file..\n");
-	result = f_write(&g_sOutputFile,buffer,buffer_len,&usCount);
-	usCount = buffer_len;
-	//SysCtlDelay(TheSysClock/10);	   	
-	g_sOutputFile.fs = (FATFS*)&g_sFatFs;
-	//UARTprintf("after write file..\n");
-	if(result!=FR_OK){
-		finishReceiving();
-		UARTprintf("fail to write file:%s\n",(char*)StringFromFresult(result));
-	}else{
-		*(unsigned short*)(&(ulCount))= usCount;
-		received_size += ulCount;
-		UARTprintf("%d/%d\n",received_size,file_size);
+
+	UARTprintf("%d \n",buffer_len);
+	for(usCount=0;usCount<buffer_len;++usCount){
+		*ptFile++ = buffer[usCount];
 	}
+	*(unsigned short*)(&(ulCount))= usCount;
+	received_size += ulCount;
+	UARTprintf("%d/%d\n",received_size,file_size);
+	if(current_page == PAGE_DOWNLOAD){
+		//SliderValueSet(&g_sDldProgressBar,received_size*100/file_size);
+		//WidgetPaint((tWidget*)&g_sDldProgressBar);
+	}
+
 	if(received_size>=file_size){
+		UARTprintf("start writing file\n");
+
+		SysCtlDelay(TheSysClock);
 		finishReceiving();
-	    UARTprintf("finish receiving\n");
+
+	    UARTprintf("finish receiving\n"); 
+		//CanvasTextSet(&g_sRecFileInfo,"Finish!!"); 
+		//WidgetPaint((tWidget*)&g_sRecFileInfo);
+		//SliderValueSet(&g_sDldProgressBar,0);
+		//WidgetPaint((tWidget*)&g_sDldProgressBar);	
 	}
 }
 
 void finishReceiving(void){
+	FRESULT result;	  
+	unsigned long ulCount=0,write_size;
+	unsigned short usCount;
+	ptFile = tempFile;
+	//SliderValueSet(&g_sDldProgressBar,0);	 
+	//WidgetPaint((tWidget*)&g_sDldProgressBar);
+	if(openFileWrite(recFileName)!=FR_OK){
+		return;	
+	}
+	if(file_size>2048)
+	for(write_size=0;write_size<file_size-2048;){
+		result = f_write(&g_sOutputFile,ptFile,2048,&usCount);
+		if(result!=FR_OK){
+			UARTprintf("write fail\n");
+			break;
+		}		  		 
+		//SliderValueSet(&g_sDldProgressBar,write_size*100/file_size);
+		//WidgetPaint((tWidget*)&g_sDldProgressBar);
+		ptFile+=usCount;
+		*(unsigned short*)(&(ulCount))= usCount;
+		write_size+=ulCount;	   
+		UARTprintf("%d/%d\n",write_size,file_size);
+	}
+	result = f_write(&g_sOutputFile,ptFile,file_size-write_size,&usCount);
+	if(result!=FR_OK){
+		UARTprintf("write fail\n");
+	}
+
+	ExtRAMFree(tempFile);
 	isFileReceiving = 0;
 	f_close(&g_sOutputFile);
 }

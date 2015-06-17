@@ -17,14 +17,6 @@
 #define RIFF_FORMAT_MSADPCM     0x0002
 #define RIFF_FORMAT_IMAADPCM    0x0011
 
-extern unsigned long g_ulBytesPlayed;
-extern unsigned char g_pucBuffer[AUDIO_BUFFER_SIZE];
-extern unsigned long g_ulMaxBufferSize;
-extern volatile unsigned long g_ulFlags;
-extern unsigned long g_ulBytesRemaining;
-extern unsigned short g_usMinutes;
-extern unsigned short g_usSeconds;
-
 typedef struct
 {
     unsigned long ulSampleRate;

@@ -19,7 +19,9 @@
 #include "third_party/fatfs/src/diskio.h"
 
 #include "drivers/kitronix320x240x16_ssd2119_idm_sbc.h"
-#include "drivers/sound.h"
+#include "drivers/sound.h"	 
+#include "drivers/extram.h"
+#include "drivers/bget.h"
 #include "drivers/touch.h"
 #include "drivers/set_pinout.h"
 
@@ -57,7 +59,7 @@ static char g_cCwdBuf[PATH_BUF_SIZE] = "/";
 
 static char music_progress[MUSIC_PROGRESS_TEXT_LEN];
 static unsigned long g_ulBytesPlayed;
-static unsigned char g_pucBuffer[AUDIO_BUFFER_SIZE];
+unsigned char g_pucBuffer[AUDIO_BUFFER_SIZE];
 static unsigned long g_ulMaxBufferSize;
 volatile unsigned long g_ulFlags;
 static unsigned long g_ulBytesRemaining;
@@ -72,19 +74,27 @@ unsigned int current_page;		//current page on screen
 
 extern tCanvasWidget g_sListBackground;
 extern tCanvasWidget g_sDetailBackground;
+extern tCanvasWidget g_sDownloadBackground;
 extern tCanvasWidget g_sHeading;
-extern tPushButtonWidget g_sBackBtn;
+extern tCanvasWidget g_sDownloadHeading;
+extern tPushButtonWidget g_sBackBtn;	   
+extern tPushButtonWidget g_sBackBtn2;
+extern tPushButtonWidget g_sBtnDownload;
+
 extern tCanvasWidget g_sProgressText;
 extern tCanvasWidget g_sTextFrame;
 extern tCanvasWidget g_sListHeading;
 extern tPushButtonWidget g_sPause;		
 extern tPushButtonWidget g_sResume;
 extern tSliderWidget g_sProgressBar;
-extern tCanvasWidget g_sMusicName;
 extern tCanvasWidget g_sMusicPic;
+
+extern tCanvasWidget g_sRecFileInfo;
+//extern tSliderWidget g_sDldProgressBar;
 
 void OnListBoxChange(tWidget *pWidget, short usSelected);
 void OnBackBtnPress(tWidget *pWidget);
+void OnDownloadPress(tWidget *pWidget);
 
 //file list
 ListBox(g_sDirList, &g_sListBackground, 0, 0,
@@ -101,21 +111,42 @@ Canvas(g_sDetailBackground,WIDGET_ROOT,0,&g_sProgressText,
 	&g_sKitronix320x240x16_SSD2119,0,30,320,210,
 	CANVAS_STYLE_FILL,ClrWhite,0,0,0,0,0,0);
 
-Canvas(g_sListHeading, &g_sListBackground, &g_sDirList, 0,
+Canvas(g_sDownloadBackground,WIDGET_ROOT,0,&g_sDownloadHeading,
+	&g_sKitronix320x240x16_SSD2119, 0, 0, 320, 240,
+      CANVAS_STYLE_FILL, ClrWhite, 0, 0, 0, 0, 0, 0);
+
+Canvas(g_sDownloadHeading,&g_sDownloadBackground,&g_sRecFileInfo,&g_sBackBtn2,
+	&g_sKitronix320x240x16_SSD2119, 0, 0, 320, 30,
+    CANVAS_STYLE_FILL | CANVAS_STYLE_TEXT | CANVAS_STYLE_TEXT_OPAQUE,
+	MAIN_COLOR, 0, ClrWhite, &g_sFontCmss20, "DOWNLOAD", 0, 0);
+
+Canvas(g_sListHeading, &g_sListBackground, &g_sDirList, &g_sBtnDownload,
        &g_sKitronix320x240x16_SSD2119, 0, 0, 320, 30,
        (CANVAS_STYLE_FILL | CANVAS_STYLE_TEXT | CANVAS_STYLE_TEXT_OPAQUE),
-       MAIN_COLOR, 0, ClrWhite, &g_sFontCmss20, "Getting IP..", 0, 0);
+       MAIN_COLOR, 0, ClrWhite, &g_sFontCmss20, "GETTING IP..", 0, 0);
 
 Canvas(g_sHeading, WIDGET_ROOT, &g_sDetailBackground, &g_sBackBtn,
        &g_sKitronix320x240x16_SSD2119, 0, 0, 320, 30,
-       (CANVAS_STYLE_FILL | CANVAS_STYLE_TEXT),
+       (CANVAS_STYLE_FILL | CANVAS_STYLE_TEXT | CANVAS_STYLE_TEXT_OPAQUE),
        MAIN_COLOR, 0, ClrWhite, &g_sFontCmss20, "Music", 0, 0);
 
 RectangularButton(g_sBackBtn,&g_sHeading,0,0,
 	&g_sKitronix320x240x16_SSD2119,0,0,30,30,
 	(PB_STYLE_TEXT|PB_STYLE_FILL),
 	MAIN_COLOR,MAIN_COLOR,0,ClrWhite,
-	&g_sFontCmss22b,"..",0,0,0,0,OnBackBtnPress);
+	&g_sFontCmss20b,"..",0,0,0,0,OnBackBtnPress);
+
+RectangularButton(g_sBackBtn2,&g_sDownloadHeading,0,0,
+	&g_sKitronix320x240x16_SSD2119,0,0,30,30,
+	(PB_STYLE_TEXT|PB_STYLE_FILL),
+	MAIN_COLOR,MAIN_COLOR,0,ClrWhite,
+	&g_sFontCmss20b,"..",0,0,0,0,OnBackBtnPress);
+
+RectangularButton(g_sBtnDownload,&g_sListHeading,0,0,
+	&g_sKitronix320x240x16_SSD2119,290,0,30,30,
+	(PB_STYLE_TEXT|PB_STYLE_FILL),
+	MAIN_COLOR,MAIN_COLOR,0,ClrWhite,
+	&g_sFontCmss20b,"D",0,0,0,0,OnDownloadPress);
 
 Canvas(g_sProgressText,&g_sDetailBackground,&g_sPause,0,
 	&g_sKitronix320x240x16_SSD2119,0,180,320,40,
@@ -134,19 +165,29 @@ RectangularButton(g_sResume,&g_sDetailBackground,&g_sProgressBar,0,
 	MAIN_COLOR,MAIN_COLOR,0,ClrWhite,
 	&g_sFontCmss12b,"RESUME",0,0,0,0,resumeMusic);
 
-Slider(g_sProgressBar,&g_sDetailBackground,&g_sMusicName,0,
+Slider(g_sProgressBar,&g_sDetailBackground,&g_sMusicPic,0,
 	&g_sKitronix320x240x16_SSD2119,0,220,320,20,
 	0,100,0,SL_STYLE_FILL|SL_STYLE_BACKG_FILL|SL_STYLE_LOCKED,
 	PB_COLOR,ClrSilver,0,0,0,0,0,0,0,0);
 
-Canvas(g_sMusicName,&g_sDetailBackground,&g_sMusicPic,0,
-	&g_sKitronix320x240x16_SSD2119,0,30,320,30,
-	CANVAS_STYLE_TEXT_HCENTER | CANVAS_STYLE_TEXT | CANVAS_STYLE_TEXT_OPAQUE,
-	ClrWhite,0,GREY,&g_sFontCmss20,"",0,0);	
-
 Canvas(g_sMusicPic,&g_sDetailBackground,0,0,
 	&g_sKitronix320x240x16_SSD2119,110,60,100,100,
 	CANVAS_STYLE_IMG,0,0,0,0,0,g_pucImageP2,0);
+
+Canvas(g_sRecFileInfo,&g_sDownloadBackground,0,0,
+	&g_sKitronix320x240x16_SSD2119,0,40,320,40,
+	CANVAS_STYLE_TEXT_HCENTER | CANVAS_STYLE_TEXT | CANVAS_STYLE_TEXT_OPAQUE,
+	ClrWhite,0,GREY,&g_sFontCmss20,"Waiting..",0,0);
+
+/*Slider(g_sDldProgressBar,&g_sDownloadBackground,0,0,
+	&g_sKitronix320x240x16_SSD2119,20,100,280,20,
+	0,100,0,SL_STYLE_FILL|SL_STYLE_BACKG_FILL|SL_STYLE_LOCKED,
+	PB_COLOR,ClrSilver,0,0,0,0,0,0,0,0); */
+
+/*Slider(g_sWriteProgressBar,&g_sDownloadBackground,0,0,
+	&g_sKitronix320x240x16_SSD2119,20,140,280,20,
+	0,100,0,SL_STYLE_FILL|SL_STYLE_BACKG_FILL|SL_STYLE_LOCKED,
+	PB_COLOR,ClrSilver,0,0,0,0,0,0,0,0);*/
 
 const char *
 StringFromFresult(FRESULT fresult)
@@ -525,6 +566,11 @@ main(void)
     TouchScreenInit();
     TouchScreenCallbackSet(WidgetPointerMessage);
 	EthernetInitial();
+	if(!SDRAMInit(1, (EPI_SDRAM_CORE_FREQ_50_100 | EPI_SDRAM_FULL_POWER | EPI_SDRAM_SIZE_256MBIT), 1024)){
+		UARTprintf("sd ram initial fail!\n");
+		while(1);
+	}
+	allocMem();
 
     if(f_mount(0, &g_sFatFs) != FR_OK)return(1);
 
@@ -567,6 +613,10 @@ void OnBackBtnPress(tWidget *pWidget){
 	switchPage(PAGE_LIST);
 }
 
+void OnDownloadPress(tWidget *pWidget){
+	switchPage(PAGE_DOWNLOAD);
+}
+
 void switchMusic(const char* name){
 	//UARTprintf("play %s,len=%d\n",name,strlen(name));
 	WaveClose(&g_sFileObject);
@@ -575,8 +625,8 @@ void switchMusic(const char* name){
 		g_ulFlags |= BUFFER_PLAYING;
 	}
 	if(current_page==PAGE_DETAIL){
-		CanvasTextSet(&g_sMusicName,music_name);
-		WidgetPaint((tWidget*)&g_sMusicName);
+		CanvasTextSet(&g_sHeading,music_name);
+		WidgetPaint((tWidget*)&g_sHeading);
 		SliderValueSet(&g_sProgressBar,0);
 		WidgetPaint((tWidget*)&g_sProgressBar);
 	}
@@ -606,7 +656,20 @@ void switchPage(int page){
 			WidgetAdd(WIDGET_ROOT,(tWidget*)&g_sDetailBackground);
 			WidgetPaint(WIDGET_ROOT);
 			break;
+		case PAGE_DOWNLOAD:
+			current_page = PAGE_DOWNLOAD;
+			WidgetRemove((tWidget*)&g_sListBackground);
+			WidgetAdd(WIDGET_ROOT,(tWidget*)&g_sDownloadBackground);
+			WidgetPaint(WIDGET_ROOT);
+			//WidgetPaint((tWidget*)&g_sDldProgressBar);
 		default:
 			break;
 	}
+}
+
+void allocMem(void){
+	/*g_pucBuffer = ExtRAMAlloc(AUDIO_BUFFER_SIZE);
+	if(g_pucBuffer==0){
+		UARTprintf("fail to allocate\n");
+	}*/
 }

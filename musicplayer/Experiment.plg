@@ -3,20 +3,23 @@
 <pre>
 <h1>µVision Build Log</h1>
 <h2>Project:</h2>
-C:\Users\Administrator\Documents\lm3s9b92-music-player\musicplayer\Experiment.uvproj
-Project File Date:  06/17/2015
+C:\Users\Administrator\Documents\lm3s9b92-music-player-new\musicplayer\Experiment.uvproj
+Project File Date:  06/19/2015
 
 <h2>Output:</h2>
-Load "C:\\Users\\Administrator\\Documents\\lm3s9b92-music-player\\musicplayer\\Experiment.AXF" 
+Build target 'Target 1'
+linking...
+Program Size: Code=65544 RO-data=18828 RW-data=2028 ZI-data=49500  
+"Experiment.axf" - 0 Error(s), 0 Warning(s).
+Load "C:\\Users\\Administrator\\Documents\\lm3s9b92-music-player-new\\musicplayer\\Experiment.AXF" 
+Connecting: Mode=JTAG, Speed=1000000Hz
+Connection failed!, error code=&d
+Load "C:\\Users\\Administrator\\Documents\\lm3s9b92-music-player-new\\musicplayer\\Experiment.AXF" 
 Connecting: Mode=JTAG, Speed=1000000Hz
 Erase Done.
 Programming Done.
 Verify OK.
 Build target 'Target 1'
-compiling main.c...
-main.c(156): warning:  #144-D: a value of type "void (*)(void)" cannot be used to initialize an entity of type "void (*)(tWidget *)"
-main.c(162): warning:  #144-D: a value of type "void (*)(void)" cannot be used to initialize an entity of type "void (*)(tWidget *)"
-main.c(675): warning:  #1-D: last line of file ends without a newline
 compiling TCPhandler.c...
 TCPhandler.c(84): warning:  #167-D: argument of type "unsigned char *" is incompatible with parameter of type "const char *"
 TCPhandler.c(87): warning:  #167-D: argument of type "unsigned char *" is incompatible with parameter of type "const char *"
@@ -24,22 +27,79 @@ TCPhandler.c(97): warning:  #167-D: argument of type "unsigned char *" is incomp
 TCPhandler.c(144): warning:  #513-D: a value of type "unsigned char *" cannot be assigned to an entity of type "char *"
 TCPhandler.c(146): warning:  #167-D: argument of type "unsigned char *" is incompatible with parameter of type "const char *"
 TCPhandler.c(163): warning:  #223-D: function "usprintf" declared implicitly
-TCPhandler.c(177): warning:  #513-D: a value of type "unsigned char *" cannot be assigned to an entity of type "char *"
-TCPhandler.c(179): warning:  #167-D: argument of type "unsigned char *" is incompatible with parameter of type "const char *"
+TCPhandler.c(181): warning:  #513-D: a value of type "unsigned char *" cannot be assigned to an entity of type "char *"
+TCPhandler.c(183): warning:  #167-D: argument of type "unsigned char *" is incompatible with parameter of type "const char *"
 linking...
-Program Size: Code=65504 RO-data=18828 RW-data=2028 ZI-data=49244  
-"Experiment.axf" - 0 Error(s), 11 Warning(s).
-Load "C:\\Users\\Administrator\\Documents\\lm3s9b92-music-player\\musicplayer\\Experiment.AXF" 
+Program Size: Code=65548 RO-data=18828 RW-data=2028 ZI-data=49500  
+"Experiment.axf" - 0 Error(s), 8 Warning(s).
+Load "C:\\Users\\Administrator\\Documents\\lm3s9b92-music-player-new\\musicplayer\\Experiment.AXF" 
 Connecting: Mode=JTAG, Speed=1000000Hz
 Erase Done.
 Programming Done.
 Verify OK.
 Build target 'Target 1'
-assembling startup_rvmdk.S...
+compiling TCPhandler.c...
+TCPhandler.c(84): warning:  #167-D: argument of type "unsigned char *" is incompatible with parameter of type "const char *"
+TCPhandler.c(87): warning:  #167-D: argument of type "unsigned char *" is incompatible with parameter of type "const char *"
+TCPhandler.c(97): warning:  #167-D: argument of type "unsigned char *" is incompatible with parameter of type "char *"
+TCPhandler.c(144): warning:  #513-D: a value of type "unsigned char *" cannot be assigned to an entity of type "char *"
+TCPhandler.c(146): warning:  #167-D: argument of type "unsigned char *" is incompatible with parameter of type "const char *"
+TCPhandler.c(163): warning:  #223-D: function "usprintf" declared implicitly
+TCPhandler.c(181): warning:  #513-D: a value of type "unsigned char *" cannot be assigned to an entity of type "char *"
+TCPhandler.c(183): warning:  #167-D: argument of type "unsigned char *" is incompatible with parameter of type "const char *"
 linking...
-Program Size: Code=65504 RO-data=18828 RW-data=2028 ZI-data=49500  
-"Experiment.axf" - 0 Error(s), 0 Warning(s).
-Load "C:\\Users\\Administrator\\Documents\\lm3s9b92-music-player\\musicplayer\\Experiment.AXF" 
+Program Size: Code=65544 RO-data=18828 RW-data=2028 ZI-data=49500  
+"Experiment.axf" - 0 Error(s), 8 Warning(s).
+Load "C:\\Users\\Administrator\\Documents\\lm3s9b92-music-player-new\\musicplayer\\Experiment.AXF" 
+Connecting: Mode=JTAG, Speed=1000000Hz
+Erase Done.
+Programming Done.
+Verify OK.
+Build target 'Target 1'
+compiling TCPhandler.c...
+TCPhandler.c(89): warning:  #167-D: argument of type "unsigned char *" is incompatible with parameter of type "const char *"
+TCPhandler.c(92): warning:  #167-D: argument of type "unsigned char *" is incompatible with parameter of type "const char *"
+TCPhandler.c(102): warning:  #167-D: argument of type "unsigned char *" is incompatible with parameter of type "char *"
+TCPhandler.c(149): warning:  #513-D: a value of type "unsigned char *" cannot be assigned to an entity of type "char *"
+TCPhandler.c(151): warning:  #167-D: argument of type "unsigned char *" is incompatible with parameter of type "const char *"
+TCPhandler.c(168): warning:  #223-D: function "usprintf" declared implicitly
+TCPhandler.c(186): warning:  #513-D: a value of type "unsigned char *" cannot be assigned to an entity of type "char *"
+TCPhandler.c(188): warning:  #167-D: argument of type "unsigned char *" is incompatible with parameter of type "const char *"
+linking...
+Program Size: Code=65624 RO-data=18828 RW-data=2028 ZI-data=49500  
+"Experiment.axf" - 0 Error(s), 8 Warning(s).
+Load "C:\\Users\\Administrator\\Documents\\lm3s9b92-music-player-new\\musicplayer\\Experiment.AXF" 
+Connecting: Mode=JTAG, Speed=1000000Hz
+Erase Done.
+Programming Done.
+Verify OK.
+Build target 'Target 1'
+compiling TCPhandler.c...
+TCPhandler.c(90): warning:  #167-D: argument of type "unsigned char *" is incompatible with parameter of type "const char *"
+TCPhandler.c(93): warning:  #167-D: argument of type "unsigned char *" is incompatible with parameter of type "const char *"
+TCPhandler.c(103): warning:  #167-D: argument of type "unsigned char *" is incompatible with parameter of type "char *"
+TCPhandler.c(150): warning:  #513-D: a value of type "unsigned char *" cannot be assigned to an entity of type "char *"
+TCPhandler.c(152): warning:  #167-D: argument of type "unsigned char *" is incompatible with parameter of type "const char *"
+TCPhandler.c(169): warning:  #223-D: function "usprintf" declared implicitly
+TCPhandler.c(174): warning:  #223-D: function "ExtRamAlloc" declared implicitly
+TCPhandler.c(174): error:  #513: a value of type "int" cannot be assigned to an entity of type "char *"
+TCPhandler.c(185): warning:  #513-D: a value of type "unsigned char *" cannot be assigned to an entity of type "char *"
+TCPhandler.c(187): warning:  #167-D: argument of type "unsigned char *" is incompatible with parameter of type "const char *"
+Target not created
+Build target 'Target 1'
+compiling TCPhandler.c...
+TCPhandler.c(90): warning:  #167-D: argument of type "unsigned char *" is incompatible with parameter of type "const char *"
+TCPhandler.c(93): warning:  #167-D: argument of type "unsigned char *" is incompatible with parameter of type "const char *"
+TCPhandler.c(103): warning:  #167-D: argument of type "unsigned char *" is incompatible with parameter of type "char *"
+TCPhandler.c(150): warning:  #513-D: a value of type "unsigned char *" cannot be assigned to an entity of type "char *"
+TCPhandler.c(152): warning:  #167-D: argument of type "unsigned char *" is incompatible with parameter of type "const char *"
+TCPhandler.c(169): warning:  #223-D: function "usprintf" declared implicitly
+TCPhandler.c(185): warning:  #513-D: a value of type "unsigned char *" cannot be assigned to an entity of type "char *"
+TCPhandler.c(187): warning:  #167-D: argument of type "unsigned char *" is incompatible with parameter of type "const char *"
+linking...
+Program Size: Code=65648 RO-data=18828 RW-data=2032 ZI-data=49496  
+"Experiment.axf" - 0 Error(s), 8 Warning(s).
+Load "C:\\Users\\Administrator\\Documents\\lm3s9b92-music-player-new\\musicplayer\\Experiment.AXF" 
 Connecting: Mode=JTAG, Speed=1000000Hz
 Erase Done.
 Programming Done.

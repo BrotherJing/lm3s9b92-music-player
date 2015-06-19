@@ -41,6 +41,7 @@ unsigned long file_size,received_size;
 unsigned char isFileReceiving;
 char recFileInfo[64];
 char recFileName[16];
+char* tmpFileName;
 unsigned char *tempFile, *ptFile;
 
 FIL g_sOutputFile;
@@ -54,15 +55,20 @@ void buf_receive(struct pbuf *p){
 	unsigned long tot_len;
 	unsigned long len;
 	unsigned char *buf_ptr_char;
+	unsigned long *buf_ptr_long;
 
 	tot_len = p->tot_len;
 	len = 0;
 	q = p;
 	while(q!=NULL&&len<tot_len){
-		buf_ptr_char = q->payload;
-		for(i=0;i<q->len;++i,++len){
-			*(buffer+len)=*buf_ptr_char++;
+		buf_ptr_long = (unsigned long*)q->payload;
+		//buf_ptr_char = q->payload;
+		for(i=0;i<q->len-4;i+=4,len+=4){
+			*(unsigned long*)(buffer+len)=*buf_ptr_long++;
 		}
+		buf_ptr_char = (unsigned char*)buf_ptr_long;
+		for(;i<q->len;++i,++len)
+			*(buffer+len) = *buf_ptr_char++;
 		q=q->next;				
 	}
 	
@@ -163,9 +169,11 @@ void parseTCPCmd(struct tcp_pcb *pcb,char* cmd){
 			usprintf(recFileInfo,"%s %d Bytes",divider+1,file_size);
 			CanvasTextSet(&g_sRecFileInfo,recFileInfo); 
 			WidgetPaint((tWidget*)&g_sRecFileInfo);	
-		}
+		}				   
+		strcpy(recFileName,divider+1);
+		tmpFileName = ExtRAMAlloc(strlen(recFileName));
+		strcpy(tmpFileName,recFileName);
 		if((tempFile=ExtRAMAlloc(file_size))!=0){
-			strcpy(recFileName,divider+1);
 			ptFile = tempFile;
 			isFileReceiving = 1;				   
 		}
@@ -208,13 +216,23 @@ FRESULT openFileWrite(char* filename){
 
 void writeFile(void){
 	//FRESULT result = FR_OK;
+	unsigned long *ptFileLong,*ptBufferLong;
 	unsigned short usCount;
 	unsigned long ulCount = 0;
 
-	UARTprintf("%d \n",buffer_len);
-	for(usCount=0;usCount<buffer_len;++usCount){
+	UARTprintf("%d \n",buffer_len);	 
+	ptFileLong = (unsigned long*)ptFile;
+	ptBufferLong = (unsigned long*)buffer;
+	for(usCount=0;usCount<buffer_len-4;usCount+=4){
+		*ptFileLong++ = *ptBufferLong++;
+	}
+	ptFile = (unsigned char*)ptFileLong;
+	for(;usCount<buffer_len;++usCount){
 		*ptFile++ = buffer[usCount];
 	}
+	/*for(usCount=0;usCount<buffer_len;++usCount){
+		*ptFile++ = buffer[usCount];
+	}*/
 	*(unsigned short*)(&(ulCount))= usCount;
 	received_size += ulCount;
 	UARTprintf("%d/%d\n",received_size,file_size);
@@ -249,7 +267,9 @@ void finishReceiving(void){
 		SliderValueSet(&g_sDldProgressBar,0);	 
 		WidgetPaint((tWidget*)&g_sDldProgressBar);
 	}
-
+	
+	strcpy(recFileName,tmpFileName);
+	ExtRAMFree(tmpFileName);
 	if(openFileWrite(recFileName)!=FR_OK){
 		UARTprintf("fail to open file");
 		return;	

@@ -451,6 +451,16 @@
               <FileType>1</FileType>
               <FilePath>H:\tempInstall\StellarisWare\utils\lwiplib.c</FilePath>
             </File>
+            <File>
+              <FileName>bget.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\drivers\bget.c</FilePath>
+            </File>
+            <File>
+              <FileName>extram.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\drivers\extram.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>

@@ -22,6 +22,7 @@
 #include "grlib/slider.h"										
 #include "utils/locator.h"
 #include "utils/lwiplib.h"			   
+#include "utils/ustdlib.h"
 #include "utils/uartstdio.h"   
 #include "third_party/fatfs/src/ff.h"
 #include "third_party/fatfs/src/diskio.h"
@@ -40,7 +41,7 @@ unsigned long buffer_len;
 unsigned long file_size,received_size;
 unsigned char isFileReceiving;
 char recFileInfo[64];
-char recFileName[16];
+//char recFileName[16];
 char* tmpFileName;
 unsigned char *tempFile, *ptFile;
 
@@ -62,7 +63,6 @@ void buf_receive(struct pbuf *p){
 	q = p;
 	while(q!=NULL&&len<tot_len){
 		buf_ptr_long = (unsigned long*)q->payload;
-		//buf_ptr_char = q->payload;
 		for(i=0;i<q->len-4;i+=4,len+=4){
 			*(unsigned long*)(buffer+len)=*buf_ptr_long++;
 		}
@@ -170,9 +170,9 @@ void parseTCPCmd(struct tcp_pcb *pcb,char* cmd){
 			CanvasTextSet(&g_sRecFileInfo,recFileInfo); 
 			WidgetPaint((tWidget*)&g_sRecFileInfo);	
 		}				   
-		strcpy(recFileName,divider+1);
-		tmpFileName = ExtRAMAlloc(strlen(recFileName));
-		strcpy(tmpFileName,recFileName);
+		//strcpy(recFileName,divider+1);
+		tmpFileName = ExtRAMAlloc(strlen(divider+1));
+		strcpy(tmpFileName,divider+1);
 		if((tempFile=ExtRAMAlloc(file_size))!=0){
 			ptFile = tempFile;
 			isFileReceiving = 1;				   
@@ -190,7 +190,20 @@ void parseTCPCmd(struct tcp_pcb *pcb,char* cmd){
 				UARTprintf("ls fail\n");
 			}
 		}
+	}
+	else if(strncmp(cmd,"vol",3)==0){
+		SoundVolumeSet(str2int(cmd+4));
 	}	
+}						
+
+int str2int(char* str){
+	int tmp=0;
+	while(*str!='\0'){
+		tmp*=10;
+		tmp+=(*str-'0');
+		++str;
+	}
+	return tmp;
 }
 
 char* splitFileInfo(char* info){
@@ -249,7 +262,7 @@ void writeFile(void){
 	    UARTprintf("finish receiving\n");
 		
 		if(current_page == PAGE_DOWNLOAD){ 
-			CanvasTextSet(&g_sRecFileInfo,"Finish!!"); 
+			CanvasTextSet(&g_sRecFileInfo,"       Finish!!       "); 
 			WidgetPaint((tWidget*)&g_sRecFileInfo);
 			SliderValueSet(&g_sDldProgressBar,0);
 			WidgetPaint((tWidget*)&g_sDldProgressBar);	
@@ -268,15 +281,16 @@ void finishReceiving(void){
 		WidgetPaint((tWidget*)&g_sDldProgressBar);
 	}
 	
-	strcpy(recFileName,tmpFileName);
-	ExtRAMFree(tmpFileName);
-	if(openFileWrite(recFileName)!=FR_OK){
+	//strcpy(recFileName,tmpFileName);
+	if(openFileWrite(tmpFileName)!=FR_OK){
 		UARTprintf("fail to open file");
 		return;	
 	}
-	if(file_size>2048)
-	for(write_size=0;write_size<file_size-2048;){
-		result = f_write(&g_sOutputFile,ptFile,2048,&usCount);
+	ExtRAMFree(tmpFileName);
+	
+	if(file_size>4096)
+	for(write_size=0;write_size<file_size-4096;){
+		result = f_write(&g_sOutputFile,ptFile,4096,&usCount);
 		if(result!=FR_OK){
 			UARTprintf("write fail\n");
 			break;

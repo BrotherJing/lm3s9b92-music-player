@@ -10,5 +10,6 @@ extern FRESULT openFileWrite(char* filename);
 extern void writeFile(void);	
 extern void finishReceiving(void);					
 extern char* splitFileInfo(char* info);
+extern int str2int(char* str);
 
 #endif

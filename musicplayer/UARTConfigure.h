@@ -10,6 +10,7 @@ extern unsigned int buffer_ptr;
 //通信波特率设为115200
 extern void UART0Initial(void);
 extern void UARTStringPut(unsigned long ulBase,const char *);
+void UARTStringPutDefault(void);
 
 extern void UART1Initial(void);
 

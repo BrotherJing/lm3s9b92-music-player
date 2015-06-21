@@ -346,7 +346,7 @@
               <MiscControls></MiscControls>
               <Define>rvmdk PART_LM3S9B96 TARGET_IS_TEMPEST_RB1</Define>
               <Undefine></Undefine>
-              <IncludePath>..\musicplayer;C:\StellarisWare;C:\StellarisWare\boards\Smart-9B92-C3;C:\StellarisWare\third_party;C:\StellarisWare\third_party\lwip-1.3.2\ports\stellaris\include;C:l\StellarisWare\third_party\lwip-1.3.2\apps;C:\StellarisWare\third_party\lwip-1.3.2\src\include;C:\StellarisWare\third_party\lwip-1.3.2\src\include\ipv4</IncludePath>
+              <IncludePath>..\musicplayer;C:\StellarisWare;C:\StellarisWare\boards\Smart-9B92-C3;C:\StellarisWare\third_party;C:\StellarisWare\third_party\lwip-1.3.2\ports\stellaris\include;C:\StellarisWare\third_party\lwip-1.3.2\apps;C:\StellarisWare\third_party\lwip-1.3.2\src\include;C:\StellarisWare\third_party\lwip-1.3.2\src\include\ipv4</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -435,11 +435,6 @@
               <FileName>main.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\main.c</FilePath>
-            </File>
-            <File>
-              <FileName>uartstdio.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>H:\tempInstall\StellarisWare\utils\uartstdio.c</FilePath>
             </File>
             <File>
               <FileName>locator.c</FileName>

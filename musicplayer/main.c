@@ -1,5 +1,7 @@
 #include <string.h>
 
+#define MINIMIZE_SIZE
+
 #include "HardwareLibrary.h"
 #include "LuminaryDriverLibrary.h"
 
@@ -10,8 +12,7 @@
 #include "grlib/listbox.h"
 #include "grlib/pushbutton.h"
 
-#include "utils/ustdlib.h"			   
-#include "utils/uartstdio.h"		 
+#include "utils/ustdlib.h"			 
 #include "utils/locator.h"
 #include "utils/lwiplib.h"
 
@@ -35,7 +36,9 @@
 #include "FileHelper.h"
 #include "main.h" 
 
+#ifndef MINIMIZE_SIZE
 #include "images/p2.h"
+#endif
 
 #ifdef ewarm
 #pragma data_alignment=1024
@@ -68,6 +71,8 @@ static unsigned short g_usSeconds;
 static unsigned short g_usMinutesPlayed;
 static unsigned short g_usSecondsPlayed;
 static char music_name[MAX_FILENAME_STRING_LEN];
+
+char uart_buf[UART_BUF_LEN];
 
 tWaveHeader g_sWaveHeader;
 unsigned int current_page;		//current page on screen
@@ -134,19 +139,19 @@ RectangularButton(g_sBackBtn,&g_sHeading,0,0,
 	&g_sKitronix320x240x16_SSD2119,0,0,30,30,
 	(PB_STYLE_TEXT|PB_STYLE_FILL),
 	MAIN_COLOR,MAIN_COLOR,0,ClrWhite,
-	&g_sFontCmss20b,"..",0,0,0,0,OnBackBtnPress);
+	&g_sFontCmss20,"..",0,0,0,0,OnBackBtnPress);
 
 RectangularButton(g_sBackBtn2,&g_sDownloadHeading,0,0,
 	&g_sKitronix320x240x16_SSD2119,0,0,30,30,
 	(PB_STYLE_TEXT|PB_STYLE_FILL),
 	MAIN_COLOR,MAIN_COLOR,0,ClrWhite,
-	&g_sFontCmss20b,"..",0,0,0,0,OnBackBtnPress);
+	&g_sFontCmss20,"..",0,0,0,0,OnBackBtnPress);
 
 RectangularButton(g_sBtnDownload,&g_sListHeading,0,0,
 	&g_sKitronix320x240x16_SSD2119,290,0,30,30,
 	(PB_STYLE_TEXT|PB_STYLE_FILL),
 	MAIN_COLOR,MAIN_COLOR,0,ClrWhite,
-	&g_sFontCmss20b,"D",0,0,0,0,OnDownloadPress);
+	&g_sFontCmss20,"D",0,0,0,0,OnDownloadPress);
 
 Canvas(g_sProgressText,&g_sDetailBackground,&g_sPause,0,
 	&g_sKitronix320x240x16_SSD2119,0,180,320,40,
@@ -157,22 +162,28 @@ RectangularButton(g_sPause,&g_sDetailBackground,&g_sResume,0,
 	&g_sKitronix320x240x16_SSD2119,5,185,60,30,
 	(PB_STYLE_TEXT|PB_STYLE_FILL),
 	MAIN_COLOR,MAIN_COLOR,0,ClrWhite,
-	&g_sFontCmss12b,"PAUSE",0,0,0,0,pauseMusic);
+	&g_sFontCmss14,"PAUSE",0,0,0,0,pauseMusic);
 
 RectangularButton(g_sResume,&g_sDetailBackground,&g_sProgressBar,0,
 	&g_sKitronix320x240x16_SSD2119,70,185,60,30,
 	(PB_STYLE_TEXT|PB_STYLE_FILL),
 	MAIN_COLOR,MAIN_COLOR,0,ClrWhite,
-	&g_sFontCmss12b,"RESUME",0,0,0,0,resumeMusic);
+	&g_sFontCmss14,"RESUME",0,0,0,0,resumeMusic);
 
 Slider(g_sProgressBar,&g_sDetailBackground,&g_sMusicPic,0,
 	&g_sKitronix320x240x16_SSD2119,0,220,320,20,
 	0,100,0,SL_STYLE_FILL|SL_STYLE_BACKG_FILL|SL_STYLE_LOCKED,
 	PB_COLOR,ClrSilver,0,0,0,0,0,0,0,0);
 
+#ifdef MINIMIZE_SIZE
+Canvas(g_sMusicPic,&g_sDetailBackground,0,0,
+	&g_sKitronix320x240x16_SSD2119,110,60,100,100,
+	CANVAS_STYLE_FILL,0,0,0,0,0,0,0);
+#else
 Canvas(g_sMusicPic,&g_sDetailBackground,0,0,
 	&g_sKitronix320x240x16_SSD2119,110,60,100,100,
 	CANVAS_STYLE_IMG,0,0,0,0,0,g_pucImageP2,0);
+#endif
 
 Canvas(g_sRecFileInfo,&g_sDownloadBackground,&g_sDldProgressBar,0,
 	&g_sKitronix320x240x16_SSD2119,0,40,320,40,
@@ -250,27 +261,27 @@ WaveOpen(FIL *pFile, const char *pcFileName, tWaveHeader *pWaveHeader)
     Result = f_read(pFile, g_pucBuffer, 12, &usCount);
     if(Result != FR_OK)
     {	
-		UARTprintf("fail to read RIFF chunk\n");
+		//UARTprintf("fail to read RIFF chunk\n");
         f_close(pFile);
         return(Result);
     }
     if((pulBuffer[0] != RIFF_CHUNK_ID_RIFF) || (pulBuffer[2] != RIFF_TAG_WAVE))
     {							  
-		UARTprintf("no RIFF chunk found\n");
+		//UARTprintf("no RIFF chunk found\n");
         f_close(pFile);
         return(FR_INVALID_NAME);
     }
     Result = f_read(pFile, g_pucBuffer, 8, &usCount);
     if(Result != FR_OK)
     {	   
-		UARTprintf("fail to read FMT chunk\n");
+		//UARTprintf("fail to read FMT chunk\n");
         f_close(pFile);
         return(Result);
     }
 
     if(pulBuffer[0] != RIFF_CHUNK_ID_FMT)
     {	
-		UARTprintf("no FMT chunk found\n");
+		//UARTprintf("no FMT chunk found\n");
         f_close(pFile);
         return(FR_INVALID_NAME);
     }
@@ -279,7 +290,7 @@ WaveOpen(FIL *pFile, const char *pcFileName, tWaveHeader *pWaveHeader)
     Result = f_read(pFile, g_pucBuffer, ulChunkSize, &usCount);
     if(Result != FR_OK)
     {	
-		UARTprintf("fail to read FMT chunk\n");
+		//UARTprintf("fail to read FMT chunk\n");
         f_close(pFile);
         return(Result);
     }
@@ -303,7 +314,7 @@ WaveOpen(FIL *pFile, const char *pcFileName, tWaveHeader *pWaveHeader)
     }
     if(pWaveHeader->usNumChannels > 2)
     {  
-		UARTprintf("channels number error\n");
+		//UARTprintf("channels number error\n");
         f_close(pFile);
         return(FR_INVALID_NAME);
     }
@@ -317,14 +328,14 @@ WaveOpen(FIL *pFile, const char *pcFileName, tWaveHeader *pWaveHeader)
     Result = f_read(pFile, g_pucBuffer, 8, &usCount);
     if(Result != FR_OK)
     {
-		UARTprintf("fail to read DATA chunk\n");
+		//UARTprintf("fail to read DATA chunk\n");
         f_close(pFile);
         return(Result);
     }
 
     if(pulBuffer[0] != RIFF_CHUNK_ID_DATA)
     {	
-		UARTprintf("no DATA chunk found\n");
+		//UARTprintf("no DATA chunk found\n");
         f_close(pFile);
         return(Result);
     }
@@ -342,7 +353,7 @@ WaveOpen(FIL *pFile, const char *pcFileName, tWaveHeader *pWaveHeader)
     }
     SoundSetFormat(pWaveHeader->ulSampleRate, pWaveHeader->usBitsPerSample,
                    pWaveHeader->usNumChannels);	
-	UARTprintf("open .wav file succeed\n");
+	//UARTprintf("open .wav file succeed\n");
 
 	usprintf(music_progress, "00:00/%02d:%02d",g_usMinutes,g_usSeconds);
 	CanvasTextSet(&g_sProgressText,music_progress);		
@@ -492,7 +503,7 @@ int Cmd_ls(int argc, char *argv[])
 
     if(fresult != FR_OK)
     {
-		UARTprintf("Error from SD Card: %s\n",(char*)StringFromFresult(fresult));
+		//UARTprintf("Error from SD Card: %s\n",(char*)StringFromFresult(fresult));
 		return(fresult);
     }
 
@@ -509,8 +520,9 @@ int Cmd_ls(int argc, char *argv[])
         {
 			if(useEthernet)
 				usprintf(output_buffer,"error reading dir\n");
-			else
-				UARTprintf("error reading dir\n");		
+			else{
+				//UARTprintf("error reading dir\n");
+			}		
             return(fresult);
         }
 
@@ -523,7 +535,9 @@ int Cmd_ls(int argc, char *argv[])
 		usprintf(g_pcFilenames[ulItemCount], "[%c] %s",
                  (g_sFileInfo.fattrib & AM_DIR) ? 'D' : 'F',
                   g_sFileInfo.fname);
-		UARTprintf("%s\n",g_pcFilenames[ulItemCount]);	
+		//UARTprintf("%s\n",g_pcFilenames[ulItemCount]);	
+		usprintf(uart_buf,"%s\n",g_pcFilenames[ulItemCount]);
+		UARTStringPutDefault();
 		if(useEthernet){
 			usprintf(inner_buffer,"%s\n",g_pcFilenames[ulItemCount]);
 			strcpy(output_buffer,inner_buffer);
@@ -552,7 +566,7 @@ main(void)
 	GPIOInitial();
 	UART0Initial();
 	TimerInitial();
-    UARTStdioInit(0);
+    //UARTStdioInit(0);
     PinoutSet();
     ROM_SysCtlPeripheralEnable(SYSCTL_PERIPH_UDMA);
     SysCtlDelay(10);
@@ -567,7 +581,7 @@ main(void)
     TouchScreenCallbackSet(WidgetPointerMessage);
 	EthernetInitial();
 	if(!SDRAMInit(1, (EPI_SDRAM_CORE_FREQ_50_100 | EPI_SDRAM_FULL_POWER | EPI_SDRAM_SIZE_256MBIT), 1024)){
-		UARTprintf("sd ram initial fail!\n");
+		//UARTprintf("sd ram initial fail!\n");
 		while(1);
 	}
 	allocMem();
@@ -603,7 +617,7 @@ void OnListBoxChange(tWidget *pWidget, short usSelected){
 		else{
 			switchPage(PAGE_DETAIL);
 			switchMusic(&g_pcFilenames[selected][4]);
-			UARTprintf("select %s\n",&g_pcFilenames[selected][4]);
+			//UARTprintf("select %s\n",&g_pcFilenames[selected][4]);
 		}
 	}
 }
@@ -674,3 +688,4 @@ void allocMem(void){
 		UARTprintf("fail to allocate\n");
 	}*/
 }
+

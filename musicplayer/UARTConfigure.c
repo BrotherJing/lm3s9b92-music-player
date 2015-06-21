@@ -4,6 +4,7 @@
 
 //#include "SysCtlConfigure.h"
 #include "UARTConfigure.h"
+#include "main.h"
 
 unsigned int buffer_ptr;
 unsigned char uart_buffer[UART_BUFFER_SIZE];
@@ -34,6 +35,12 @@ void UARTStringPut(unsigned long ulBase,const char *message)
 	{
 		UARTCharPut(ulBase,*(message++));
 	}
+}
+
+void UARTStringPutDefault(void){
+	char *message = uart_buf;
+	while(*message!='\0')
+		UARTCharPut(UART0_BASE,*(message++));
 }
 
 void UART1Initial(void)

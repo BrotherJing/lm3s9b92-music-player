@@ -5,8 +5,8 @@
 #include "grlib/widget.h"
 #include "grlib/canvas.h"			
 #include "utils/locator.h"
-#include "utils/lwiplib.h"			   
-#include "utils/uartstdio.h"
+#include "utils/lwiplib.h"		
+#include "utils/ustdlib.h"
 
 #include "EthernetConfigure.h"
 
@@ -30,7 +30,7 @@ void EthernetInitial(void){
 	ROM_FlashUserGet(&ulUser0, &ulUser1);
     if((ulUser0 == 0xffffffff) || (ulUser1 == 0xffffffff))
     {
-        UARTprintf("MAC Address Not Programmed!\n");
+        //UARTprintf("MAC Address Not Programmed!\n");
     }
 
     pucMACArray[0] = ((ulUser0 >>  0) & 0xff);
@@ -51,7 +51,7 @@ void EthernetInitial(void){
     LocatorInit();
     LocatorMACAddrSet(pucMACArray);
     LocatorAppTitleSet("EK-LM3S9B92 enet_lwip");				
-    UARTprintf("Waiting for IP... ");
+    //UARTprintf("Waiting for IP... ");
 
 }
 
@@ -81,7 +81,7 @@ void lwIPHostTimerHandler(void)
         // Draw a spinning line to indicate that the IP address is being
         // discoverd.
         //
-        UARTprintf("\b%c", g_pcTwirl[g_ulTwirlPos]);
+        //UARTprintf("\b%c", g_pcTwirl[g_ulTwirlPos]);
 
         //
         // Update the index into the twirl.
@@ -100,10 +100,10 @@ void lwIPHostTimerHandler(void)
 		usprintf(g_cIPAddress,"%d.%d.%d.%d", ulIPAddress & 0xff,
                    (ulIPAddress >> 8) & 0xff, (ulIPAddress >> 16) & 0xff,
                    (ulIPAddress >> 24) & 0xff);
-        UARTprintf("\rIP: %d.%d.%d.%d       \n",ulIPAddress & 0xff,
+        /*UARTprintf("\rIP: %d.%d.%d.%d       \n",ulIPAddress & 0xff,
                    (ulIPAddress >> 8) & 0xff, (ulIPAddress >> 16) & 0xff,
-                   (ulIPAddress >> 24) & 0xff);
-		UARTprintf("%s\n",g_cIPAddress);
+                   (ulIPAddress >> 24) & 0xff);	  
+		UARTprintf("%s\n",g_cIPAddress);		  */
 		CanvasTextSet(&g_sListHeading,g_cIPAddress); 
 		WidgetPaint((tWidget*)&g_sListHeading);
 
@@ -116,17 +116,17 @@ void lwIPHostTimerHandler(void)
         // Display the new network mask.
         //
         ulIPAddress = lwIPLocalNetMaskGet();
-        UARTprintf("Netmask: %d.%d.%d.%d\n", ulIPAddress & 0xff,
+        /*UARTprintf("Netmask: %d.%d.%d.%d\n", ulIPAddress & 0xff,
                    (ulIPAddress >> 8) & 0xff, (ulIPAddress >> 16) & 0xff,
-                   (ulIPAddress >> 24) & 0xff);
+                   (ulIPAddress >> 24) & 0xff);	 */
 
         //
         // Display the new gateway address.
         //
         ulIPAddress = lwIPLocalGWAddrGet();
-        UARTprintf("Gateway: %d.%d.%d.%d\n", ulIPAddress & 0xff,
+        /*UARTprintf("Gateway: %d.%d.%d.%d\n", ulIPAddress & 0xff,
                    (ulIPAddress >> 8) & 0xff, (ulIPAddress >> 16) & 0xff,
-                   (ulIPAddress >> 24) & 0xff);
+                   (ulIPAddress >> 24) & 0xff);*/
 
     }
 }

@@ -2,7 +2,6 @@
 #include "LuminaryDriverLibrary.h"
 
 #include <string.h>
-#include "utils/uartstdio.h"
 #include "UARTConfigure.h"
 #include "UARTISR.h"			  
 #include "third_party/fatfs/src/ff.h"
@@ -45,7 +44,7 @@ void parseCmd(const char* cmd){
 		switchMusic(cmd+5);	
 	}
 	else if(strncmp(cmd,"cd",2)==0){
-		UARTprintf("cd to %s\n",cmd+3);
+		//UARTprintf("cd to %s\n",cmd+3);
 	}		
 	else if(strncmp(cmd,"ls",2)==0){
 		Cmd_ls(0,NULL);

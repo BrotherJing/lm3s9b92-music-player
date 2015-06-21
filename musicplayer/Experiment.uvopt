@@ -272,10 +272,10 @@
       <FileType>1</FileType>
       <tvExp>0</tvExp>
       <Focus>0</Focus>
-      <ColumnNumber>0</ColumnNumber>
+      <ColumnNumber>35</ColumnNumber>
       <tvExpOptDlg>0</tvExpOptDlg>
-      <TopLine>0</TopLine>
-      <CurrentLine>0</CurrentLine>
+      <TopLine>634</TopLine>
+      <CurrentLine>634</CurrentLine>
       <bDave2>0</bDave2>
       <PathWithFileName>H:\tempInstall\StellarisWare\utils\ustdlib.c</PathWithFileName>
       <FilenameWithoutPath>ustdlib.c</FilenameWithoutPath>
@@ -286,27 +286,13 @@
       <FileType>1</FileType>
       <tvExp>0</tvExp>
       <Focus>0</Focus>
-      <ColumnNumber>27</ColumnNumber>
+      <ColumnNumber>15</ColumnNumber>
       <tvExpOptDlg>0</tvExpOptDlg>
-      <TopLine>421</TopLine>
-      <CurrentLine>425</CurrentLine>
+      <TopLine>36</TopLine>
+      <CurrentLine>36</CurrentLine>
       <bDave2>0</bDave2>
       <PathWithFileName>.\main.c</PathWithFileName>
       <FilenameWithoutPath>main.c</FilenameWithoutPath>
-    </File>
-    <File>
-      <GroupNumber>1</GroupNumber>
-      <FileNumber>11</FileNumber>
-      <FileType>1</FileType>
-      <tvExp>0</tvExp>
-      <Focus>0</Focus>
-      <ColumnNumber>10</ColumnNumber>
-      <tvExpOptDlg>0</tvExpOptDlg>
-      <TopLine>0</TopLine>
-      <CurrentLine>0</CurrentLine>
-      <bDave2>0</bDave2>
-      <PathWithFileName>H:\tempInstall\StellarisWare\utils\uartstdio.c</PathWithFileName>
-      <FilenameWithoutPath>uartstdio.c</FilenameWithoutPath>
     </File>
     <File>
       <GroupNumber>1</GroupNumber>
@@ -328,10 +314,10 @@
       <FileType>1</FileType>
       <tvExp>0</tvExp>
       <Focus>0</Focus>
-      <ColumnNumber>28</ColumnNumber>
+      <ColumnNumber>105</ColumnNumber>
       <tvExpOptDlg>0</tvExpOptDlg>
-      <TopLine>0</TopLine>
-      <CurrentLine>0</CurrentLine>
+      <TopLine>112</TopLine>
+      <CurrentLine>112</CurrentLine>
       <bDave2>0</bDave2>
       <PathWithFileName>H:\tempInstall\StellarisWare\utils\lwiplib.c</PathWithFileName>
       <FilenameWithoutPath>lwiplib.c</FilenameWithoutPath>
@@ -412,10 +398,10 @@
       <FileType>1</FileType>
       <tvExp>0</tvExp>
       <Focus>0</Focus>
-      <ColumnNumber>51</ColumnNumber>
+      <ColumnNumber>19</ColumnNumber>
       <tvExpOptDlg>0</tvExpOptDlg>
-      <TopLine>11</TopLine>
-      <CurrentLine>20</CurrentLine>
+      <TopLine>1</TopLine>
+      <CurrentLine>4</CurrentLine>
       <bDave2>0</bDave2>
       <PathWithFileName>.\UARTISR.c</PathWithFileName>
       <FilenameWithoutPath>UARTISR.c</FilenameWithoutPath>
@@ -426,10 +412,10 @@
       <FileType>1</FileType>
       <tvExp>0</tvExp>
       <Focus>0</Focus>
-      <ColumnNumber>39</ColumnNumber>
+      <ColumnNumber>45</ColumnNumber>
       <tvExpOptDlg>0</tvExpOptDlg>
-      <TopLine>182</TopLine>
-      <CurrentLine>199</CurrentLine>
+      <TopLine>277</TopLine>
+      <CurrentLine>277</CurrentLine>
       <bDave2>0</bDave2>
       <PathWithFileName>.\TCPhandler.c</PathWithFileName>
       <FilenameWithoutPath>TCPhandler.c</FilenameWithoutPath>
@@ -461,10 +447,10 @@
       <FileType>1</FileType>
       <tvExp>0</tvExp>
       <Focus>0</Focus>
-      <ColumnNumber>0</ColumnNumber>
+      <ColumnNumber>16</ColumnNumber>
       <tvExpOptDlg>0</tvExpOptDlg>
-      <TopLine>0</TopLine>
-      <CurrentLine>0</CurrentLine>
+      <TopLine>1</TopLine>
+      <CurrentLine>7</CurrentLine>
       <bDave2>0</bDave2>
       <PathWithFileName>.\UARTConfigure.c</PathWithFileName>
       <FilenameWithoutPath>UARTConfigure.c</FilenameWithoutPath>
@@ -503,10 +489,10 @@
       <FileType>1</FileType>
       <tvExp>0</tvExp>
       <Focus>0</Focus>
-      <ColumnNumber>2</ColumnNumber>
+      <ColumnNumber>0</ColumnNumber>
       <tvExpOptDlg>0</tvExpOptDlg>
-      <TopLine>86</TopLine>
-      <CurrentLine>86</CurrentLine>
+      <TopLine>97</TopLine>
+      <CurrentLine>97</CurrentLine>
       <bDave2>0</bDave2>
       <PathWithFileName>.\EthernetConfigure.c</PathWithFileName>
       <FilenameWithoutPath>EthernetConfigure.c</FilenameWithoutPath>
@@ -514,9 +500,9 @@
   </Group>
 
   <AlienFiles>
-    <PathWithFilename>C:\StellarisWare\grlib\canvas.h</PathWithFilename>
-    <TopLine>96</TopLine>
-    <CurrentLine>105</CurrentLine>
+    <PathWithFilename>C:\Users\Administrator\Documents\lm3s9b92-music-player-new\musicplayer\UARTConfigure.h</PathWithFilename>
+    <TopLine>1</TopLine>
+    <CurrentLine>13</CurrentLine>
     <Constant>0</Constant>
     <WindowPosition>
       <length>0</length>
@@ -540,9 +526,35 @@
   </AlienFiles>
 
   <AlienFiles>
-    <PathWithFilename>C:\Users\Administrator\Documents\lm3s9b92-music-player-new\musicplayer\TCPhandler.h</PathWithFilename>
+    <PathWithFilename>C:\Users\Administrator\Documents\lm3s9b92-music-player-new\musicplayer\main.h</PathWithFilename>
     <TopLine>1</TopLine>
-    <CurrentLine>13</CurrentLine>
+    <CurrentLine>23</CurrentLine>
+    <Constant>0</Constant>
+    <WindowPosition>
+      <length>0</length>
+      <flags>0</flags>
+      <showCmd>0</showCmd>
+      <MinPosition>
+        <xPos>0</xPos>
+        <yPos>0</yPos>
+      </MinPosition>
+      <MaxPosition>
+        <xPos>0</xPos>
+        <yPos>0</yPos>
+      </MaxPosition>
+      <NormalPosition>
+        <Top>0</Top>
+        <Left>0</Left>
+        <Right>0</Right>
+        <Bottom>0</Bottom>
+      </NormalPosition>
+    </WindowPosition>
+  </AlienFiles>
+
+  <AlienFiles>
+    <PathWithFilename>C:\Users\Administrator\Documents\lm3s9b92-music-player-new\musicplayer\FileHelper.h</PathWithFilename>
+    <TopLine>27</TopLine>
+    <CurrentLine>46</CurrentLine>
     <Constant>0</Constant>
     <WindowPosition>
       <length>0</length>
@@ -570,37 +582,55 @@
     <ActiveMDIGroup>0</ActiveMDIGroup>
     <MDIGroup>
       <Size>100</Size>
-      <ActiveTab>1</ActiveTab>
+      <ActiveTab>7</ActiveTab>
       <Documents>
         <Doc>
           <Name>.\main.c</Name>
-          <ColumnNumber>27</ColumnNumber>
-          <TopLine>421</TopLine>
-          <CurrentLine>425</CurrentLine>
+          <ColumnNumber>15</ColumnNumber>
+          <TopLine>36</TopLine>
+          <CurrentLine>36</CurrentLine>
         </Doc>
         <Doc>
           <Name>.\TCPhandler.c</Name>
-          <ColumnNumber>39</ColumnNumber>
-          <TopLine>182</TopLine>
-          <CurrentLine>199</CurrentLine>
+          <ColumnNumber>45</ColumnNumber>
+          <TopLine>277</TopLine>
+          <CurrentLine>277</CurrentLine>
         </Doc>
         <Doc>
           <Name>.\EthernetConfigure.c</Name>
-          <ColumnNumber>2</ColumnNumber>
-          <TopLine>86</TopLine>
-          <CurrentLine>86</CurrentLine>
+          <ColumnNumber>0</ColumnNumber>
+          <TopLine>97</TopLine>
+          <CurrentLine>97</CurrentLine>
         </Doc>
         <Doc>
-          <Name>TCPhandler.h</Name>
-          <ColumnNumber>7</ColumnNumber>
+          <Name>.\UARTConfigure.c</Name>
+          <ColumnNumber>16</ColumnNumber>
+          <TopLine>1</TopLine>
+          <CurrentLine>7</CurrentLine>
+        </Doc>
+        <Doc>
+          <Name>UARTConfigure.h</Name>
+          <ColumnNumber>30</ColumnNumber>
           <TopLine>1</TopLine>
           <CurrentLine>13</CurrentLine>
         </Doc>
         <Doc>
-          <Name>C:\StellarisWare\grlib/canvas.h</Name>
-          <ColumnNumber>11</ColumnNumber>
-          <TopLine>96</TopLine>
-          <CurrentLine>105</CurrentLine>
+          <Name>main.h</Name>
+          <ColumnNumber>39</ColumnNumber>
+          <TopLine>1</TopLine>
+          <CurrentLine>23</CurrentLine>
+        </Doc>
+        <Doc>
+          <Name>FileHelper.h</Name>
+          <ColumnNumber>47</ColumnNumber>
+          <TopLine>27</TopLine>
+          <CurrentLine>46</CurrentLine>
+        </Doc>
+        <Doc>
+          <Name>H:\tempInstall\StellarisWare\utils\lwiplib.c</Name>
+          <ColumnNumber>105</ColumnNumber>
+          <TopLine>112</TopLine>
+          <CurrentLine>112</CurrentLine>
         </Doc>
       </Documents>
     </MDIGroup>

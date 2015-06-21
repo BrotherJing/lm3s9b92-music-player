@@ -14,7 +14,8 @@
 #include "netif/stellarisif.h"
 							  
 #include "drivers/extram.h"
-#include "drivers/bget.h"
+#include "drivers/bget.h"		
+#include "drivers/sound.h"	 
 
 #include "grlib/grlib.h"
 #include "grlib/widget.h"
@@ -23,7 +24,6 @@
 #include "utils/locator.h"
 #include "utils/lwiplib.h"			   
 #include "utils/ustdlib.h"
-#include "utils/uartstdio.h"   
 #include "third_party/fatfs/src/ff.h"
 #include "third_party/fatfs/src/diskio.h"
 
@@ -81,7 +81,7 @@ void buf_receive(struct pbuf *p){
 
 err_t my_recv(void *arg, struct tcp_pcb *pcb, struct pbuf *p, err_t err){
 	
-	unsigned char *cmd;
+	char *cmd;
 	int i;
 	if(err==ERR_OK){
 		buf_receive(p);//read data in pcb to buffer
@@ -93,7 +93,7 @@ err_t my_recv(void *arg, struct tcp_pcb *pcb, struct pbuf *p, err_t err){
 				if(strncmp(buffer+i,REQUEST_END,REQ_END_LEN)==0)break;
 			}
 			if(i>p->len-REQ_END_LEN){//not complete
-				UARTprintf("the command is not complete\n");
+				//UARTprintf("the command is not complete\n");
 				pbuf_free(p);
 				return ERR_OK;
 			}		
@@ -113,12 +113,13 @@ err_t my_recv(void *arg, struct tcp_pcb *pcb, struct pbuf *p, err_t err){
 
 err_t my_accept(void *arg,struct tcp_pcb *pcb,err_t err){
 	if(err==ERR_OK){
-		UARTprintf("connect succeed!!\n");
+		//UARTprintf("connect succeed!!\n");
 		//when receive packet, call my_recv
   		tcp_recv(pcb, my_recv);
 	}
-	else
-		UARTprintf("fail to connect.\n");
+	else{
+		//UARTprintf("fail to connect.\n");
+	}
 	return ERR_OK;
 }
 
@@ -144,7 +145,7 @@ void parseTCPCmd(struct tcp_pcb *pcb,char* cmd){
 		switchMusic(cmd+5);	
 	}
 	else if(strncmp(cmd,"cd",2)==0){
-		UARTprintf("cd to %s\n",cmd+3);
+		//UARTprintf("cd to %s\n",cmd+3);
 	}		
 	else if(strncmp(cmd,"ls",2)==0){
 		argv[0] = buffer;
@@ -152,7 +153,7 @@ void parseTCPCmd(struct tcp_pcb *pcb,char* cmd){
 			tcp_write(pcb,buffer,strlen(buffer),0);
 		}
 		else{
-			UARTprintf("ls fail\n");
+			//UARTprintf("ls fail\n");
 		}
 	}
 	else if(strncmp(cmd,"res",3)==0){
@@ -164,7 +165,7 @@ void parseTCPCmd(struct tcp_pcb *pcb,char* cmd){
 	else if(strncmp(cmd,"file",4)==0){
 		divider = splitFileInfo(cmd+5);//the divider of file size and file name
 		received_size = 0;
-		UARTprintf("receiving file: %s\n",divider+1);
+		//UARTprintf("receiving file: %s\n",divider+1);
 		if(current_page == PAGE_DOWNLOAD){
 			usprintf(recFileInfo,"%s %d Bytes",divider+1,file_size);
 			CanvasTextSet(&g_sRecFileInfo,recFileInfo); 
@@ -180,14 +181,14 @@ void parseTCPCmd(struct tcp_pcb *pcb,char* cmd){
 	}
 	else if(strncmp(cmd,"rm",2)==0){
 		if(f_unlink(cmd+3)!=FR_OK){
-			UARTprintf("fail to remove file\n");	
+			//UARTprintf("fail to remove file\n");	
 		}else{
 			argv[0] = buffer;
 			if(Cmd_ls(1,argv)==0){
 				tcp_write(pcb,buffer,strlen(buffer),0);
 			}
 			else{
-				UARTprintf("ls fail\n");
+				//UARTprintf("ls fail\n");
 			}
 		}
 	}
@@ -220,9 +221,9 @@ FRESULT openFileWrite(char* filename){
 	FRESULT result;
 	result = f_open(&g_sOutputFile, filename, FA_CREATE_NEW);
 	result = f_open(&g_sOutputFile, filename, FA_WRITE);
-	UARTprintf("open file:%s\n",filename);
+	//UARTprintf("open file:%s\n",filename);
 	if(result!=FR_OK){
-		UARTprintf("fail to open output file:%s\n",(char*)StringFromFresult(result));
+		//UARTprintf("fail to open output file:%s\n",(char*)StringFromFresult(result));
 	}
 	return result;
 }				  	 
@@ -233,7 +234,7 @@ void writeFile(void){
 	unsigned short usCount;
 	unsigned long ulCount = 0;
 
-	UARTprintf("%d \n",buffer_len);	 
+	//UARTprintf("%d \n",buffer_len);	 
 	ptFileLong = (unsigned long*)ptFile;
 	ptBufferLong = (unsigned long*)buffer;
 	for(usCount=0;usCount<buffer_len-4;usCount+=4){
@@ -248,18 +249,20 @@ void writeFile(void){
 	}*/
 	*(unsigned short*)(&(ulCount))= usCount;
 	received_size += ulCount;
-	UARTprintf("%d/%d\n",received_size,file_size);
+	usprintf(uart_buf,"%d/%d\n",received_size,file_size);
+	UARTStringPutDefault();
+	//UARTprintf("%d/%d\n",received_size,file_size);
 	if(current_page == PAGE_DOWNLOAD){
 		SliderValueSet(&g_sDldProgressBar,received_size*100/file_size);
 		WidgetPaint((tWidget*)&g_sDldProgressBar);
 	}
 
 	if(received_size>=file_size){
-		UARTprintf("start writing file\n");
+		//UARTprintf("start writing file\n");
 
 		finishReceiving();
 
-	    UARTprintf("finish receiving\n");
+	    //UARTprintf("finish receiving\n");
 		
 		if(current_page == PAGE_DOWNLOAD){ 
 			CanvasTextSet(&g_sRecFileInfo,"       Finish!!       "); 
@@ -283,7 +286,7 @@ void finishReceiving(void){
 	
 	//strcpy(recFileName,tmpFileName);
 	if(openFileWrite(tmpFileName)!=FR_OK){
-		UARTprintf("fail to open file");
+		//UARTprintf("fail to open file");
 		return;	
 	}
 	ExtRAMFree(tmpFileName);
@@ -292,13 +295,15 @@ void finishReceiving(void){
 	for(write_size=0;write_size<file_size-4096;){
 		result = f_write(&g_sOutputFile,ptFile,4096,&usCount);
 		if(result!=FR_OK){
-			UARTprintf("write fail\n");
+			//UARTprintf("write fail\n");
 			break;
 		}
 		ptFile+=usCount;
 		*(unsigned short*)(&(ulCount))= usCount;
 		write_size+=ulCount;	   
-		UARTprintf("%d/%d\n",write_size,file_size);
+		//UARTprintf("%d/%d\n",write_size,file_size);
+		usprintf(uart_buf,"%d/%d\n",write_size,file_size);
+		UARTStringPutDefault();
 		if(current_page == PAGE_DOWNLOAD){		  		 
 			SliderValueSet(&g_sDldProgressBar,write_size*100/file_size);
 			WidgetPaint((tWidget*)&g_sDldProgressBar);
@@ -306,7 +311,7 @@ void finishReceiving(void){
 	}
 	result = f_write(&g_sOutputFile,ptFile,file_size-write_size,&usCount);
 	if(result!=FR_OK){
-		UARTprintf("write fail\n");
+		//UARTprintf("write fail\n");
 	}
 
 	ExtRAMFree(tempFile);

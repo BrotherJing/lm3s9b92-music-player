@@ -683,9 +683,22 @@ void switchPage(int page){
 }
 
 void allocMem(void){
+	int a = 0;
+	int b = 0;
+	int *c;
+	c = ExtRAMAlloc(4);
 	/*g_pucBuffer = ExtRAMAlloc(AUDIO_BUFFER_SIZE);
 	if(g_pucBuffer==0){
 		UARTprintf("fail to allocate\n");
 	}*/
+	usprintf(uart_buf,"global: %x\n",(unsigned long)&g_pucBuffer);
+	UARTStringPutDefault();
+	usprintf(uart_buf,"stack: %x\n",(unsigned long)&a);
+	UARTStringPutDefault();
+	usprintf(uart_buf,"stack: %x\n",(unsigned long)&b);
+	UARTStringPutDefault();
+	usprintf(uart_buf,"extram: %x\n",(unsigned long)c);
+	UARTStringPutDefault();
+	ExtRAMFree(c);
 }
 

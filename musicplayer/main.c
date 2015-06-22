@@ -566,7 +566,6 @@ main(void)
 	GPIOInitial();
 	UART0Initial();
 	TimerInitial();
-    //UARTStdioInit(0);
     PinoutSet();
     ROM_SysCtlPeripheralEnable(SYSCTL_PERIPH_UDMA);
     SysCtlDelay(10);

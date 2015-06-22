@@ -84,6 +84,8 @@ err_t my_recv(void *arg, struct tcp_pcb *pcb, struct pbuf *p, err_t err){
 	char *cmd;
 	int i;
 	if(err==ERR_OK){
+		usprintf(uart_buf,"pbuf: %x\n",(unsigned long)p->payload);
+		UARTStringPutDefault();
 		buf_receive(p);//read data in pcb to buffer
 		tcp_recved(pcb,p->tot_len);
 		cmd = buffer+REQ_HEAD_LEN;

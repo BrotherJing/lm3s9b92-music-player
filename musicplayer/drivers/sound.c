@@ -1009,7 +1009,7 @@ SoundBufferPlay(const void *pvData, unsigned long ulLength,
     else
     {
         ulChannel = UDMA_CHANNEL_I2S0TX | UDMA_PRI_SELECT;
-    }
+    }												  
 
     //
     // Set the DMA channel configuration.
